@@ -2,7 +2,7 @@
 
 extensions [palette array cf] ; arrays are used to enhance performance.
 
-breed[firms firm]          ; the firms in the simulation, 500 by default.
+breed[firms firm]          ; the firms in the simulation, 500 by default. Ciao
 breed[workers worker]      ; the workers or households, 5 * number of firms by default.
 breed[banks bank]          ; the banks, max of credit-market-h + 1 and number of firms / 10 by default.
 

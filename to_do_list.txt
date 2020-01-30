@@ -1,0 +1,24 @@
+TO_DO Stuff:
+
+
+1. Spiegare i parametri di Input
+	a. Per ogni parametro vanno inserite più informazioni possibili
+	b. Tutto ciò va successivamente inserito in modo ordinato nel file model_input_info
+
+2. Spiegare i parametri di Output
+	a. Per ogni parametro spiegare come viene calcolato
+	b. Creare un file di testo dove vengono riassunte le info del punto precedente
+
+3. Capire come approssimare le distribuzioni e le curve e quali parametri prendere in esame
+	a. Media, Mdediana, Deviazione Standard, massimo e minimo
+
+4. Creare una funzione per l'importazione automatica in pandas
+
+5. Definire gli output che vogliamo prendere
+
+6. Lanciare la simulazione con tutti i parametri di output corretti
+
+MACRO-STEP: Individuare quanta variabilità c'è tra le run
+
+Run: 1000 (Monte carlo simulation)
+Ticks: 300 (300 mesi, da definire l'onset(quando si stabilizza))

@@ -1,6 +1,6 @@
 ; Bottom-up Adaptive Macroeconomics
 
-extensions [palette array cf] ; arrays are used to enhance performance.
+extensions [palette array] ; arrays are used to enhance performance.
 
 breed[firms firm]          ; the firms in the simulation, 500 by default.
 breed[workers worker]      ; the workers or households, 5 * number of firms by default.
@@ -191,7 +191,7 @@ to adapt-expected-demand-or-price
   let avg-market-price average-market-price
   ask firms [
     let minimum-price-Pl ifelse-value (production-Y > 0)[( total-payroll-W + amount-of-Interest-to-pay ) / production-Y] [avg-market-price]
-    (cf:ifelse
+    (ifelse
       (inventory-S = 0 and individual-price-P >= avg-market-price and production-Y > 0)
         [ set expected-demand-De max (list 1 ceiling (production-Y * (1 + production-shock-rho)))]
       (inventory-S > 0 and individual-price-P < avg-market-price)
@@ -2033,7 +2033,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -2042,6 +2042,48 @@ NetLogo 6.0.4
     <setup>setup</setup>
     <go>go</go>
     <metric>[net-worth-A] of fn-incumbent-firms</metric>
+  </experiment>
+  <experiment name="run#1" repetitions="1000" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="300"/>
+    <metric>count workers with [not employed?] / count workers</metric>
+    <enumeratedValueSet variable="credit-market-H">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="number-of-firms">
+      <value value="100"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="production-shock-rho">
+      <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="v">
+      <value value="0.23"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="price-shock-eta">
+      <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="wages-shock-xi">
+      <value value="0.05"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="dividends-delta">
+      <value value="0.15"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="labor-market-M">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="beta">
+      <value value="0.87"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="interest-shock-phi">
+      <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="goods-market-Z">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="size-replacing-firms">
+      <value value="0.2"/>
+    </enumeratedValueSet>
   </experiment>
 </experiments>
 @#$#@#$#@

@@ -16,8 +16,3 @@ def reader(file):
 data = reader("bam_model run#1-spreadsheet.csv")
 
 
-a = data.iloc[16, 1:1000]
-
-    
-
-

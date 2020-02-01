@@ -24,20 +24,25 @@ Run: 1000 (Monte carlo simulation)
 Ticks: 300 (300 mesi, da definire l'onset(quando si stabilizza))
 
 
+@@@@@@@@@
 
 01/02/2020 (Francesco, Stefano, Sara)
 Abbiamo deciso di fare il lavoro di selezione imput, output. 
 Prendete un imput o un output studiatelo e inseritelo nel file all'interno 
 della cartella corrispondente model/
 
-Punto 3: Stefano propone di studiare la varianza
+x Mercoledì: micro brain storming di stamani sulle aree di lavoro più vicine: 
+##
+- test stocasticità [serve per vedere quanto la curva dipende dalle condizioni iniziali o quanto dalla randomness]
+- - per ogni tic (riga) calcolare var med o altri indici stat -> e far grafico con alle x i tic e alle y le variabili stat scelte (tipo media sd scelte)
+- - passare da un analisi qualitativa dei grafici a un analisi quantitativa 
+- - - ad esempio indici stat su tutta la run (o la "media" delle run, o la "dev_standard" delle run ecc)
+##
+- test misto (come suggeriva cecconi variazioni minime di una var-indipendente iniziale, per capire come cambiano una o più var-dipendenti) 
+- - rifare il listone di output [in linguaggio netLogo)
+- - ci facciamo spiegare Behaviosearch
+##
+- parte teorica di comprensione del modello
+- - cosa sono le variabili iniziali e le var finali (vedi punto 2 sopra)
 
-Test stocasticità
-    sfruttare la simul dell altro giorno su un parametro..
-    per ogni tic (riga) calc var med o altri indici -> e far grafico con alle x i tic e alle y le run 
-	test misto (variazioni minime di una var in input)
-
-Sarebbe importante trovare un indice numerico della stabilizzazione degli output
-
-
-Punto 6: Lanciare la simulazione facendo microvariazioni sui parametri
+@@@@@@@@@

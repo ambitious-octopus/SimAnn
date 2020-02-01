@@ -1,4 +1,4 @@
-Output per ogni grafico
+Imput per ogni grafico
 
 Unemployment rate:
 	unemployed / count workers

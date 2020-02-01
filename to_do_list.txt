@@ -22,3 +22,8 @@ MACRO-STEP: Individuare quanta variabilità c'è tra le run
 
 Run: 1000 (Monte carlo simulation)
 Ticks: 300 (300 mesi, da definire l'onset(quando si stabilizza))
+
+
+
+01/02/2020 (Francesco, Stefano, Sara)
+Abbiamo decisono di fare il lavoro di selezione imput, output. Prendete un imput studiatelo e inseritelo nel file all'interno della cartella model/

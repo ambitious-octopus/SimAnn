@@ -32,6 +32,12 @@ Prendete un imput o un output studiatelo e inseritelo nel file all'interno
 della cartella corrispondente model/
 
 x Mercoledì: micro brain storming di stamani sulle aree di lavoro più vicine: 
+## primissime cose:
+##
+- Leggere Macroeconomic from the bottom-up, cap 3: model at work.
+- Leggere Emergent Macroeconomics, cap 4: An Agent-Based Model
+(I due libri rispondono a molte delle domande! tipo quanti tik, da dove far partire l analisi ecc)
+## poi
 ##
 - test stocasticità [serve per vedere quanto la curva dipende dalle condizioni iniziali o quanto dalla randomness]
 - - per ogni tic (riga) calcolare var med o altri indici stat -> e far grafico con alle x i tic e alle y le variabili stat scelte (tipo media sd scelte)
@@ -46,3 +52,4 @@ x Mercoledì: micro brain storming di stamani sulle aree di lavoro più vicine:
 - - cosa sono le variabili iniziali e le var finali (vedi punto 2 sopra)
 
 @@@@@@@@@
+﻿

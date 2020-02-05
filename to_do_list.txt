@@ -57,7 +57,7 @@ x Mercoledì: micro brain storming di stamani sulle aree di lavoro più vicine:
 
 Output importanti, quelli che caratterizzano la dinamica economica e sono fondamentali:
 
-> Unemployement-rate, numero di perdone non associato a un'azienda
+> Unemployement-rate, numero di persone non associato a un'azienda
 > GDP, valore delle merci prodotte diviso per il costo del denaro (parametrizzato per il costo del denaro), noi prenderemo il nominale.
 > Production of firms, indicazione della sanità del meccanismo (forse da cambiare con of-firms invece di fn-incumbent-firms)
 > Whealth of worker, quanta ricchezza hanno i lavoratori soldi che ti rimangono dopo le spese 

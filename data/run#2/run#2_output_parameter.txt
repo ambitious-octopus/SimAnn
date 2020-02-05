@@ -1,0 +1,46 @@
+count workers with [not employed?] / count workers
+mean(map ln-hopital [net-worth-A] of fn-incumbent-firms)
+min(map ln-hopital [net-worth-A] of fn-incumbent-firms)
+max(map ln-hopital [net-worth-A] of fn-incumbent-firms)
+ln-hopital mean [net-worth-A] of firms
+ln-hopital min [net-worth-A] of firms
+ln-hopital max [net-worth-A] of firms
+max [production-Y] of fn-incumbent-firms
+max [production-Y] of fn-incumbent-firms
+min [production-Y] of fn-incumbent-firms
+mean [propensity-to-consume-c] of workers
+min [propensity-to-consume-c] of workers
+max [propensity-to-consume-c] of workers
+quarterly-inflation
+(annualized-inflation - 1) * 100
+mean [desired-production-Yd] of firms
+max [desired-production-Yd] of firms
+min [desired-production-Yd] of firms
+median [desired-production-Yd] of firms
+ln-hopital nominal-GDP
+ln-hopital real-GDP
+logarithm-of-households-consumption
+ln average-market-price
+ln min [individual-price-P] of firms
+ln max [individual-price-P] of firms
+100 * mean [my-interest-rate] of firms
+100 * max [my-interest-rate] of firms
+100 * min [my-interest-rate] of firms
+ln mean [wage-offered-Wb] of firms
+ln min [wage-offered-Wb] of firms
+ln max [wage-offered-Wb] of firms
+mean(map ln-hopital [wealth] of workers with [wealth > 0])
+min(map ln-hopital [wealth] of workers with [wealth > 0])
+max(map ln-hopital [wealth] of workers with [wealth > 0])
+mean(map ln-hopital [production-Y] of fn-incumbent-firms)
+min(map ln-hopital [production-Y] of fn-incumbent-firms)
+max(map ln-hopital [production-Y] of fn-incumbent-firms)
+ln-hopital mean [wealth] of workers
+ln-hopital max [wealth] of workers
+ln-hopital round min [wealth] of workers
+ln-hopital mean [inventory-S] of firms
+ln-hopital max [inventory-S] of firms
+ln-hopital min [inventory-S] of firms
+ln-hopital mean [patrimonial-base-E] of banks
+ln-hopital max [patrimonial-base-E] of banks
+ln-hopital min [patrimonial-base-E] of banks

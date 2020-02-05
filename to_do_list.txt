@@ -50,6 +50,31 @@ x Mercoledì: micro brain storming di stamani sulle aree di lavoro più vicine:
 ##
 - parte teorica di comprensione del modello
 - - cosa sono le variabili iniziali e le var finali (vedi punto 2 sopra)
-
 @@@@@@@@@
 ﻿
+-> Incontro 05/02 con Federico
+
+Output importanti, quelli che caratterizzano la dinamica economica e sono fondamentali
+
+>Unemployement-rate, numero di perdone non associato a un'azienda
+>GDP, valore delle merci prodotte diviso per il costo del denaro (parametrizzato per il costo del denaro), noi prenderemo il nominale.
+>Production of firms, indicazione della sanità del meccanismo (forse da cambiare con of-firms invece di fn-incumbent-firms)
+>Whealth of worker, quanta ricchezza hanno i lavoratori soldi che ti rimangono dopo le spese 
+
+Input Importanti:
+
+> Vogliono capire le modifiche nelle zone di shock (grandezze che aumentano stocasticamente)
+> Monitorando anache la dimensione del mercato, labor/good/credit - market (opportunità di scelta degli agenti)
+> Il parametro beta, quanta parte dei tuoi soldi investi, quanto un worker è propenso a spendere soldi
+
+
+
+
+
+
+
+
+
+
+
+

@@ -5,6 +5,8 @@ Francesco@nientepanico.org
 www.nientepanico.org
 """
 
+#SCARICARE DATABASE QUI https://1drv.ms/u/s!Ai6q7IUrZTevhZ9VbOjqMoVZ6b3eWA?e=cvlRRG
+
 import pandas as pd
 import numpy as np
 

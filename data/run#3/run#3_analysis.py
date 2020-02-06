@@ -11,6 +11,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+from plotly.offline import plot
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+import plotly.express as px
+
 def reader(file):
     data = pd.read_csv(file, skiprows=6)
     return data
@@ -51,8 +56,36 @@ def std(dataframe, col=""):
         std_list = np.append(std_list,std)
     return std_list
 
+mean_0 = mean(data)
+x = np.arange(0,1000)
+
+mean_1 = mean(data,".1")
+mean_2 = mean(data, ".2")
+mean_3 = mean(data, ".3")
 
 
+fig = make_subplots(rows=2, 
+                    cols=2, subplot_titles=("count workers with [not employed?] / count workers", 
+                                            "ln-hopital nominal-GDP", 
+                                            "max [production-Y] of fn-incumbent-firms", 
+                                            "max [production-Y] of fn-incumbent-firms"),
+                    vertical_spacing=0.08, 
+                    specs=[[{"type": "scatter"},
+                            {"type": "scatter"}],
+                            [{"type": "scatter"},
+                            {"type": "scatter"}]])
 
+fig.add_trace(go.Scatter(x=x, y=mean_0,mode="lines",name="1"),row=1, col=1)
+
+fig.add_trace(go.Scatter(x=x,y=mean_1,mode="lines",name="1.1"),row=1, col=2)
+
+fig.add_trace(go.Scatter(x=x, y=mean_2,mode="lines",name="1.2"),row=2, col=1)
+
+fig.add_trace(go.Scatter(x=x, y=mean_3,mode="lines",name="1.3"),row=2, col=2)
+
+fig.update_layout(title = 'Mean per run')
+
+
+plot(fig)
 
 

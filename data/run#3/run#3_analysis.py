@@ -65,9 +65,11 @@ def column_splitter(data, num_run, par=""):
     return colonne
 
 
+x = np.arange(0,1000)
+y= np.arange(0,300)
 
 # mean_0 = mean(data)
-x = np.arange(0,1000)
+
 
 # mean_1 = mean(data,".1")
 # mean_2 = mean(data, ".2")
@@ -96,27 +98,46 @@ x = np.arange(0,1000)
 # fig.update_layout(title = 'Mean per run')
 
 col = column_splitter(data, 1001)
-col2 = column_splitter(data, 1001, par=".3")
 
-# col = col.T
+ticknumber = np.arange(0,301)
 
-def prova(num):
-    casa = []
-    for a in range(num):
-        casa.append(str(a))
-    return casa
-
-listax= prova(1000)
-listay= prova(301)
-
-# lista = prova()
-        
-# col.insert(0, "casa", lista, True) 
+col.insert(0, 'tick', ticknumber)
 
 
 
-fig = px.line(col, x=listax, y=listay)
+fig = go.Figure()
+
+for a in range(1,1000):
+    fig.add_trace(go.Scatter(x=col.tick,y=col[str(a)]))
+    fig.update_layout(title_text='All the run', xaxis_rangeslider_visible=True)
 plot(fig)
+                  
+
+
+
+
+# fig.add_trace(go.Scatter(x=df.Date, y=df['AAPL.High'], name="AAPL High",
+#                          line_color='deepskyblue'))
+
+# fig.add_trace(go.Scatter(x=df.Date, y=df['AAPL.Low'], name="AAPL Low",
+#                          line_color='dimgray'))
+
+# fig.update_layout(title_text='Time Series with Rangeslider',
+#                   xaxis_rangeslider_visible=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

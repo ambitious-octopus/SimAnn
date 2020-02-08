@@ -47,45 +47,76 @@ def mean(dataframe, col=""):
     return mean_list
 
 #Funzione che calcola la deviazione standard
-def std(dataframe, col=""):
+def std(dataframe, par=""):
     std_list = np.array([])
     for a in range(1,1001):
-        column = dataframe[str(a)+col]
+        column = dataframe[str(a)+par]
         column=column.to_numpy(dtype=np.float64)
         std = np.std(column)
         std_list = np.append(std_list,std)
     return std_list
 
-mean_0 = mean(data)
+#Funzione che dato un dataset lo splitta in base al numero della run e al parametro
+def column_splitter(data, num_run, par=""):
+    lista = []
+    for a in range(1,num_run):
+        lista.append(str(a)+par)
+    colonne = data[lista]
+    return colonne
+
+
+
+# mean_0 = mean(data)
 x = np.arange(0,1000)
 
-mean_1 = mean(data,".1")
-mean_2 = mean(data, ".2")
-mean_3 = mean(data, ".3")
+# mean_1 = mean(data,".1")
+# mean_2 = mean(data, ".2")
+# mean_3 = mean(data, ".3")
 
 
-fig = make_subplots(rows=2, 
-                    cols=2, subplot_titles=("count workers with [not employed?] / count workers", 
-                                            "ln-hopital nominal-GDP", 
-                                            "max [production-Y] of fn-incumbent-firms", 
-                                            "max [production-Y] of fn-incumbent-firms"),
-                    vertical_spacing=0.08, 
-                    specs=[[{"type": "scatter"},
-                            {"type": "scatter"}],
-                            [{"type": "scatter"},
-                            {"type": "scatter"}]])
+# fig = make_subplots(rows=2, 
+#                     cols=2, subplot_titles=("count workers with [not employed?] / count workers", 
+#                                             "ln-hopital nominal-GDP", 
+#                                             "max [production-Y] of fn-incumbent-firms", 
+#                                             "max [production-Y] of fn-incumbent-firms"),
+#                     vertical_spacing=0.08, 
+#                     specs=[[{"type": "scatter"},
+#                             {"type": "scatter"}],
+#                             [{"type": "scatter"},
+#                             {"type": "scatter"}]])
 
-fig.add_trace(go.Scatter(x=x, y=mean_0,mode="lines",name="1"),row=1, col=1)
+# fig.add_trace(go.Scatter(x=x, y=mean_0,mode="lines",name="1"),row=1, col=1)
 
-fig.add_trace(go.Scatter(x=x,y=mean_1,mode="lines",name="1.1"),row=1, col=2)
+# fig.add_trace(go.Scatter(x=x,y=mean_1,mode="lines",name="1.1"),row=1, col=2)
 
-fig.add_trace(go.Scatter(x=x, y=mean_2,mode="lines",name="1.2"),row=2, col=1)
+# fig.add_trace(go.Scatter(x=x, y=mean_2,mode="lines",name="1.2"),row=2, col=1)
 
-fig.add_trace(go.Scatter(x=x, y=mean_3,mode="lines",name="1.3"),row=2, col=2)
+# fig.add_trace(go.Scatter(x=x, y=mean_3,mode="lines",name="1.3"),row=2, col=2)
 
-fig.update_layout(title = 'Mean per run')
+# fig.update_layout(title = 'Mean per run')
+
+col = column_splitter(data, 1001)
+col2 = column_splitter(data, 1001, par=".3")
+
+# col = col.T
+
+def prova(num):
+    casa = []
+    for a in range(num):
+        casa.append(str(a))
+    return casa
+
+listax= prova(1000)
+listay= prova(301)
+
+# lista = prova()
+        
+# col.insert(0, "casa", lista, True) 
 
 
+
+fig = px.line(col, x=listax, y=listay)
 plot(fig)
+
 
 

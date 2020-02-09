@@ -8,3 +8,6 @@ min [production-Y] of fn-incumbent-firms
 > Unemployement-rate, numero di persone non associato a un'azienda
 > GDP, valore delle merci prodotte diviso per il costo del denaro (parametrizzato per il costo del denaro), noi prenderemo il nominale.
 > Production of firms, indicazione della sanità del meccanismo (forse da cambiare con of-firms invece di fn-incumbent-firms)
+
+
+

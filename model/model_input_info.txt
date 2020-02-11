@@ -1,5 +1,21 @@
-Imput per ogni grafico
 
-Unemployment rate:
-	unemployed / count workers
-	
+####   parametri indipendenti da indagare   ####
+
+
+effetti incidenza dei diversi shock:
+	wages-shock-xi
+	interest-shock-phi
+	price-shock-eta
+	production-shock-rho
+
+poi i market:
+	labor-market-M
+	credit-market-H
+	goods-market-Z
+
+e il beta (propensione al consumo).
+
+################################################
+
+esplorazione con metodo del campionamento fitto..
+(e lo strumento ad hoc)

@@ -12,7 +12,7 @@ ln-hopital min [net-worth-A] of firms
 ln-hopital max [net-worth-A] of firms
 
 -> Production of firms
-max [production-Y] of fn-incumbent-firms
+mean [production-Y] of fn-incumbent-firms
 max [production-Y] of fn-incumbent-firms
 min [production-Y] of fn-incumbent-firms
 

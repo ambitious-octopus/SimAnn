@@ -75,9 +75,9 @@ Approssimare le curve:
 > Unemployment rate, guardare se ci sono gli spike, contarli e capire quanto velocemente sale e scende ogni spike e calcolare quanto è inclinata.
 Per capire come finsice basta prendere una finestra finale e fare la media e la varianza.
 
-Misure: Spike, media mobile ultime fase e varianza ultima fase, retta di regressione e come varia la pendenza
+Misure: Spike, media e varianza mobile ultima fase, retta di regressione e dispersione, come varia la pendenza (..)
 
-Obiettivo: Vedere la dipendenza delle run 
+Obiettivo: Vedere la dipendenza (stocasticità?..) delle run 
 
 
 

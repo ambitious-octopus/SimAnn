@@ -80,6 +80,8 @@ Misure: Spike, media mobile ultime fase e varianza ultima fase, retta di regress
 Obiettivo: Vedere la dipendenza delle run 
 
 
+IDEA: Autoencoder
+
 
 
 

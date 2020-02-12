@@ -51,12 +51,11 @@ def mean(dataframe, col=""):
         mean_list = np.append(mean_list,mean)
     return mean_list
 
-
 #Funzione che calcola la deviazione standard
-def std(dataframe, col=""):
+def std(dataframe, par=""):
     std_list = np.array([])
     for a in range(1,1001):
-        column = dataframe[str(a)+col]
+        column = dataframe[str(a)+par]
         column=column.to_numpy(dtype=np.float64)
         std = np.std(column)
         std_list = np.append(std_list,std)
@@ -72,35 +71,32 @@ def column_splitter(data, num_run, par=""):
 
 x=np.arange(1,1001)
 
-data_window = window_selector(data, 100)
+mean_2 = mean(data, col=".2")
+mean_3 = mean(data, col=".3")
+mean_4 = mean(data, col=".4")
 
 
+fig = make_subplots(rows=3, 
+                    cols=1, subplot_titles=("max [production-Y] of fn-incumbent-firms", 
+                                            "mean [production-Y] of fn-incumbent-firms", 
+                                            "min [production-Y] of fn-incumbent-firms"),
+                    column_widths=[1],
+                    row_heights=[0.3, 0.3, 0.3],
+                    vertical_spacing=0.1, 
+                    specs=[[{"type": "scatter"}],
+                           [{"type": "scatter"}],
+                           [{"type": "scatter"}]])
 
 
-fig = make_subplots(rows=2, 
-                    cols=2, subplot_titles=("Unemployment rate", 
-                                            "Unemployment rate, last 100 (ticks) window", 
-                                            "Unemployment rate, last 100 (ticks) window"),
-                    
-                    column_widths=[0.5, 0.5],
-                    row_heights=[0.5, 0.5],
-                    vertical_spacing=0.3, 
-                    specs=[[{"type": "scatter", "colspan": 2}, None],
-                            [{"type": "scatter"}, {"type": "scatter"}]])
+fig.add_trace(go.Scatter(x=x, y=mean_2, mode="lines",name="max"),row=1,col=1)
 
-fig.add_trace(go.Scatter(x=x, y=mean_un_100, mode="lines",name="mean"),row=1, col=1)
-fig.update_layout(xaxis_rangeslider_visible=True)
+fig.add_trace(go.Scatter(x=x,y=mean_3,mode="lines",name="mean"),row=2,col=1)
 
-fig.add_trace(go.Scatter(x=x,y=mean_0,mode="lines",name="mean"),row=2, col=1)
-
-fig.add_trace(go.Scatter(x=x, y=std_0,mode="lines",name="mean"),row=2, col=2)
+fig.add_trace(go.Scatter(x=x, y=mean_4,mode="lines",name="min"),row=3,col=1)
 
 fig.update_layout(title = 'Mean per run')
 
 plot(fig)
-
-
-
 
 
 

@@ -76,17 +76,27 @@ mean_3 = mean(data, col=".3")
 mean_4 = mean(data, col=".4")
 
 
-fig = go.Figure()
+fig = make_subplots(rows=3, 
+                    cols=1, subplot_titles=("max [production-Y] of fn-incumbent-firms", 
+                                            "mean [production-Y] of fn-incumbent-firms", 
+                                            "min [production-Y] of fn-incumbent-firms"),
+                    column_widths=[1],
+                    row_heights=[0.3, 0.3, 0.3],
+                    vertical_spacing=0.1, 
+                    specs=[[{"type": "scatter"}],
+                           [{"type": "scatter"}],
+                           [{"type": "scatter"}]])
 
-fig.add_trace(go.Scatter(x=x, y=mean_2, mode="lines",name="max"))
-fig.add_trace(go.Scatter(x=x, y=mean_3, mode="lines",name="mean"))
-fig.add_trace(go.Scatter(x=x, y=mean_4, mode="lines",name="min"))
-fig.update_layout(xaxis_rangeslider_visible=True, title = 'Production of firms')
+
+fig.add_trace(go.Scatter(x=x, y=mean_2, mode="lines",name="max"),row=1,col=1)
+
+fig.add_trace(go.Scatter(x=x,y=mean_3,mode="lines",name="mean"),row=2,col=1)
+
+fig.add_trace(go.Scatter(x=x, y=mean_4,mode="lines",name="min"),row=3,col=1)
+
+fig.update_layout(title = 'Mean per run')
 
 plot(fig)
-
-
-
 
 
 

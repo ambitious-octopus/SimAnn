@@ -16,6 +16,7 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import plotly.express as px
 
+
 def reader(file):
     data = pd.read_csv(file, skiprows=6)
     return data
@@ -64,50 +65,36 @@ def column_splitter(data, num_run, par=""):
     colonne = data[lista]
     return colonne
 
+x = np.arange(0,300)
 
-x = np.arange(0,1000)
-y= np.arange(0,300)
+par1 = column_splitter(data, 1000, "")
+par1 = par1.astype(float)
+mean_par1=par1.mean(axis=1)
+max_par1 = par1.max(axis=1)
+min_par1 = par1.min(axis=1)
+median_par1 = par1.median(axis=1)
 
-col = column_splitter(data, 1000, ".4")
+par2 = column_splitter(data, 1000, ".1")
+par2 = par2.astype(float)
+mean_par2=par2.mean(axis=1)
+max_par2=par2.max(axis=1)
+min_par2=par2.min(axis=1)
+median_par2 = par2.median(axis=1)
 
-ticknumber = np.arange(0,301)
-
-col.insert(0, "tick", ticknumber)
 
 
+fig = make_subplots(rows=2, cols=1, subplot_titles=("Unemplyement rate", "Nominal GDP"), 
+                    vertical_spacing=0.25, 
+                    specs=[[{"type": "scatter"}],
+                           [{"type": "scatter"}]])
+fig.add_trace(go.Scatter(x=x,y=max_par1,name="max",line=dict(width=2, dash='dashdot')), row=1, col=1)
+fig.add_trace(go.Scatter(x=x,y=median_par1,name="median"),row=1, col=1)
+fig.add_trace(go.Scatter(x=x,y=min_par1,name="min",line=dict(width=2, dash='dashdot')), row=1, col=1)
 
-fig = go.Figure()
+fig.add_trace(go.Scatter(x=x,y=max_par2,name="max",line=dict(width=2, dash='dashdot')), row=2, col=1)
+fig.add_trace(go.Scatter(x=x,y=median_par2,name="median"),row=2, col=1)
+fig.add_trace(go.Scatter(x=x,y=min_par2,name="min",line=dict(width=2, dash='dashdot')), row=2, col=1)
 
-for a in range(1,1001):
-    fig.add_trace(go.Scatter(x=col.tick,y=col[str(a)+".4"]))
-    fig.update_layout(title_text='Nominal GDP', xaxis_rangeslider_visible=True, showlegend=False)
-                  
+fig.update_layout(xaxis_rangeslider_visible=True)
+
 plot(fig)
-
-
-
-# fig.add_trace(go.Scatter(x=df.Date, y=df['AAPL.High'], name="AAPL High",
-#                          line_color='deepskyblue'))
-
-# fig.add_trace(go.Scatter(x=df.Date, y=df['AAPL.Low'], name="AAPL Low",
-#                          line_color='dimgray'))
-
-# fig.update_layout(title_text='Time Series with Rangeslider',
-#                   xaxis_rangeslider_visible=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

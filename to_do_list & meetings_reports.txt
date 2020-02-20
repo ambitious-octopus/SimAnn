@@ -83,7 +83,8 @@ Obiettivo: Vedere la dipendenza (stocasticità?..) delle run
 IDEA: Autoencoder
 
 
-
+Compiti:
+Inseirire varianza(deviazione standard) ogni 25 tick
 
 
 

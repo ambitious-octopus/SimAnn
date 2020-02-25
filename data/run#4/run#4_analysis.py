@@ -69,43 +69,7 @@ def column_splitter(data, num_run, par=""):
     colonne = data[lista]
     return colonne
 
-x=np.arange(1,1001)
 
-mean_0 = mean(data, col="")
-std_0= std(data, par="")
-mean_1 = mean(data, col=".1")
-
-mean_2 = mean(data, col=".3")
-
-
-
-fig = make_subplots(rows=2, 
-                    cols=2, subplot_titles=("Unemployment rate", 
-                                            "Nominal Gross Domestic Product(GDP)", 
-                                            "Mean Production of firms"),
-                    column_widths=[0.5, 0.5],
-                    row_heights=[0.5, 0.5],
-                    vertical_spacing=0.3, 
-                    specs=[[{"type": "scatter", "colspan": 2}, None],
-                            [{"type": "scatter"}, {"type": "scatter"}]])
-
-
-fig.add_trace(go.Scatter(x=x, y=mean_0, mode="lines",name="mean"),row=1, col=1)
-fig.add_trace(go.Scatter(x=x, y=std_0, mode="lines",name="std"),row=1, col=1)
-fig.update_layout(xaxis_rangeslider_visible=True)
-
-
-
-fig.add_trace(go.Scatter(x=x,y=mean_1,mode="lines",name="mean"),row=2, col=1)
-
-
-fig.add_trace(go.Scatter(x=x, y=mean_2,mode="lines",name="mean"),row=2, col=2)
-
-
-
-fig.update_layout(title = 'Mean per run')
-
-plot(fig)
 
 
 

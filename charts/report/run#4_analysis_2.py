@@ -83,6 +83,8 @@ median_par2 = par2.median(axis=1)
 
 
 
+#%%
+
 fig = make_subplots(rows=2, cols=1, subplot_titles=("Unemplyement rate", "Nominal GDP"), 
                     vertical_spacing=0.25, 
                     specs=[[{"type": "scatter"}],
@@ -95,6 +97,47 @@ fig.add_trace(go.Scatter(x=x,y=max_par2,name="max",line=dict(width=2, dash='dash
 fig.add_trace(go.Scatter(x=x,y=median_par2,name="median"),row=2, col=1)
 fig.add_trace(go.Scatter(x=x,y=min_par2,name="min",line=dict(width=2, dash='dashdot')), row=2, col=1)
 
-fig.update_layout(xaxis_rangeslider_visible=True)
-
+fig.update_layout(xaxis_rangeslider_visible=True, height=1600, width=1600)
 plot(fig)
+
+
+#%%
+
+upper_bound = go.Scatter(
+    name='Upper Bound',
+    x=df['Time'],
+    y=df['10 Min Sampled Avg']+df['10 Min Std Dev'],
+    mode='lines',
+    marker=dict(color="#444"),
+    line=dict(width=0),
+    fillcolor='rgba(68, 68, 68, 0.3)',
+    fill='tonexty')
+
+trace = go.Scatter(
+    name='Measurement',
+    x=df['Time'],
+    y=df['10 Min Sampled Avg'],
+    mode='lines',
+    line=dict(color='rgb(31, 119, 180)'),
+    fillcolor='rgba(68, 68, 68, 0.3)',
+    fill='tonexty')
+
+lower_bound = go.Scatter(
+    name='Lower Bound',
+    x=df['Time'],
+    y=df['10 Min Sampled Avg']-df['10 Min Std Dev'],
+    marker=dict(color="#444"),
+    line=dict(width=0),
+    mode='lines')
+
+# Trace order can be important
+# with continuous error bars
+data = [lower_bound, trace, upper_bound]
+
+layout = go.Layout(
+    yaxis=dict(title='Wind speed (m/s)'),
+    title='Continuous, variable value error bars.<br>Notice the hover text!',
+    showlegend = False)
+
+fig = go.Figure(data=data, layout=layout)
+py.iplot(fig, filename='pandas-continuous-error-bars')

@@ -87,7 +87,7 @@ Compiti:
 Inseirire varianza(deviazione standard) ogni 25 tick
 
 
-
+Trovare gli spike: https://datascience.stackexchange.com/questions/27031/how-to-get-spike-values-from-a-value-sequence
 
 
 

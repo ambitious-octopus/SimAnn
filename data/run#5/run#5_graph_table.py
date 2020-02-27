@@ -13,11 +13,7 @@ from plotly.offline import plot
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import plotly.express as px
-import seaborn as sns
 
-
-#%%
-#CARICO IL DATABASE
 
 def reader(file):
     data = pd.read_csv(file, skiprows=6)
@@ -180,36 +176,83 @@ interest_rate_std = error_window(interest_rate.std(axis=1))
 interest_rate_max_real = (column_splitter(data, 1000, par=".19")).max(axis=1)
 interest_rate_min_real = (column_splitter(data, 1000, par=".20")).min(axis=1)
 
+
+
 #%%
-#Nuovo dataframe
+# GRAFICO
 
-mixing = {"unemp_rate" : unemp_rate_mean, 
-          "nominal_GDP" : nominal_GDP_mean,
-          "production_inc_firm" : production_inc_firm_mean,
-          "production_firm" : production_firm_mean,
-          "wage" : wage_mean,
-          "wealth" : wealth_mean,
-          "mult_interest_rate" : mult_interest_rate_mean,
-          "interest_rate" : interest_rate_mean}
+x= np.arange(0,301)
 
-data_mean_mixed = pd.DataFrame(mixing)
+fig = make_subplots(rows=8, cols=2, 
+                    vertical_spacing=0.019, 
+                    specs=[[{"type": "scatter"}, {"type": "table"}],
+                           [{"type": "scatter"}, {"type": "table"}],
+                           [{"type": "scatter"}, {"type": "table"}],
+                           [{"type": "scatter"}, {"type": "table"}],
+                           [{"type": "scatter"}, {"type": "table"}],
+                           [{"type": "scatter"}, {"type": "table"}],
+                           [{"type": "scatter"}, {"type": "table"}],
+                           [{"type": "scatter"}, {"type": "table"}]], 
+                    x_title="tick", 
+                    column_widths=[0.8, 0.2], 
+                    subplot_titles=("Unemployment rate",
+                                    "Nominal GDP", 
+                                    "Production of incumbent-firms",
+                                    "Production of incumbent-firms",
+                                    "wage-offered-Wb",
+                                    "Wealth of workers",
+                                    "Contractual interest rate",
+                                    "100*Contractual interest rate"))
 
-data_mean_mixed.corr()
-
-sns.set(style="ticks")
-
-sns.pairplot(data_mean_mixed)
-
-
-
+#count workers with [not employed?] / count workers
+fig.add_trace(go.Scatter(x=x,y=unemp_rate_max,name="max",line=dict(width=0.8)), row=1, col=1)
+fig.add_trace(go.Scatter(x=x,y=unemp_rate_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=unemp_rate_std, symmetric=True)),row=1, col=1)
+fig.add_trace(go.Scatter(x=x,y=unemp_rate_min,name="min",line=dict(width=0.8)), row=1, col=1)
+                           
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=1, col=2)
 
 
+# ln-hopital nominal-GDP
+fig.add_trace(go.Scatter(x=x,y=nominal_GDP_max,name="max",line=dict(width=0.8)), row=2, col=1)
+fig.add_trace(go.Scatter(x=x,y=nominal_GDP_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=nominal_GDP_std, symmetric=True)),row=2, col=1)
+fig.add_trace(go.Scatter(x=x,y=nominal_GDP_min,name="min",line=dict(width=0.8)), row=2, col=1)
+
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=2, col=2)
 
 
+# mean [production-Y] of firms
+fig.add_trace(go.Scatter(x=x,y=production_firm_max_real,name="max",line=dict(width=0.8)), row=4, col=1)
+fig.add_trace(go.Scatter(x=x,y=production_firm_median,name="median", line=dict(width=1.5),  error_y=dict(type='data', array=production_firm_std, symmetric=True)),row=4, col=1)
+fig.add_trace(go.Scatter(x=x,y=production_firm_min_real,name="min",line=dict(width=0.8)), row=4, col=1)
+
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=4, col=2)
 
 
+# mean [wage-offered-Wb] of firms
+fig.add_trace(go.Scatter(x=x,y=wage_max_real,name="max",line=dict(width=0.8)), row=5, col=1)
+fig.add_trace(go.Scatter(x=x,y=wage_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=wage_std, symmetric=True)),row=5, col=1)
+fig.add_trace(go.Scatter(x=x,y=wage_min_real,name="min",line=dict(width=0.8)), row=5, col=1)
+
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=5, col=2)
+
+# ln-hopital mean [wealth] of workers
+fig.add_trace(go.Scatter(x=x,y=wealth_max_real,name="max",line=dict(width=0.8)), row=6, col=1)
+fig.add_trace(go.Scatter(x=x,y=wealth_median,name="median", line=dict(width=1.5),  error_y=dict(type='data', array=wealth_std, symmetric=True)),row=6, col=1)
+fig.add_trace(go.Scatter(x=x,y=wealth_min_real,name="min",line=dict(width=0.8)), row=6, col=1)
+
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=6, col=2)
 
 
+# mean [my-interest-rate] of firms
+fig.add_trace(go.Scatter(x=x,y=interest_rate_max_real,name="max",line=dict(width=0.8)), row=8, col=1)
+fig.add_trace(go.Scatter(x=x,y=interest_rate_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=interest_rate_std, symmetric=True)),row=8, col=1)
+fig.add_trace(go.Scatter(x=x,y=interest_rate_min_real,name="min",line=dict(width=0.8)), row=8, col=1)
+
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=8, col=2)
+
+
+fig.update_layout(height=2600, width=1600, showlegend=False)
+plot(fig)
 
 
 

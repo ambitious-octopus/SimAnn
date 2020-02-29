@@ -44,7 +44,7 @@ data = data.astype("float64")
 #FUNZIONI DI PROCESSING
 
 #Funzione che prende come parametro un dataset e un tick_window e ritorna un dataframe con la window richiesta
-def window_selector(data,tick_window):
+def col_window_selector(data,tick_window):
     window = data.drop(data.index[:-tick_window-1])
     return window
     
@@ -96,8 +96,18 @@ def error_window(series):
             series[index] = "null"
     return series
 
+def wind_selector(serie,from_tick,to_tick):
+    window = serie.iloc[from_tick:to_tick+1]
+    return window
+
+
 #%%
-#CALCOLO GLI INDICATORI SULLE DIMESIONI PRESE IN ESAME
+#CALCOLO GLI INDICATORI SULLE DIMESIONI PRESE IN ESAME E SULLE WINDOW
+
+wind_from_tick = 280
+wind_to_tick = 300
+wind_range = wind_to_tick - wind_from_tick
+
 
 # count workers with [not employed?] / count workers
 unemp_rate = column_splitter(data, 1000, par="")
@@ -106,6 +116,14 @@ unemp_rate_median = unemp_rate.median(axis=1)
 unemp_rate_max = unemp_rate.max(axis=1)
 unemp_rate_min = unemp_rate.min(axis=1)
 unemp_rate_std = error_window(unemp_rate.std(axis=1))
+
+
+unemp_rate_wind = wind_selector(unemp_rate,wind_from_tick,wind_to_tick).mean(axis=1)
+unemp_rate_wind_mean = round(unemp_rate_wind.mean(), 2)
+unemp_rate_wind_median = unemp_rate_wind.median()
+unemp_rate_wind_std = round(unemp_rate_wind.std(),2)
+unemp_rate_wind_min = unemp_rate_wind.min()
+unemp_rate_wind_max = unemp_rate_wind.max()
 
 
 # ln-hopital nominal-GDP
@@ -120,61 +138,58 @@ nominal_GDP_std = error_window(nominal_GDP.std(axis=1))
 production_inc_firm = column_splitter(data, 1000, par=".4")
 production_inc_firm_mean = production_inc_firm.mean(axis=1)
 production_inc_firm_median = production_inc_firm.median(axis=1)
-production_inc_firm_max = production_inc_firm.max(axis=1)
-production_inc_firm_min = production_inc_firm.min(axis=1)
 production_inc_firm_std = error_window(production_inc_firm.std(axis=1))
-production_inc_firm_max_real = (column_splitter(data, 1000, par=".3")).max(axis=1)
-production_inc_firm_min_real = (column_splitter(data, 1000, par=".5")).min(axis=1)
+
+production_inc_firm_max_mean = column_splitter(data, 1000, par=".3").mean(axis=1)
+production_inc_firm_min_mean = column_splitter(data, 1000, par=".5").mean(axis=1)
 
 # mean [production-Y] of firms
 production_firm = column_splitter(data, 1000, par=".7")
 production_firm_mean = production_firm.mean(axis=1)
 production_firm_median = production_firm.median(axis=1)
-production_firm_max = production_firm.max(axis=1)
-production_firm_min = production_firm.min(axis=1)
 production_firm_std = error_window(production_firm.std(axis=1))
-production_firm_max_real = (column_splitter(data, 1000, par=".6")).max(axis=1)
-production_firm_min_real = (column_splitter(data, 1000, par=".8")).min(axis=1)
+
+production_firm_max_mean = column_splitter(data, 1000, par=".6").mean(axis=1)
+production_firm_min_mean = column_splitter(data, 1000, par=".8").mean(axis=1)
 
 # mean [wage-offered-Wb] of firms
 wage = column_splitter(data, 1000, par=".9")
 wage_mean = wage.mean(axis=1)
 wage_median = wage.median(axis=1)
-wage_max = wage.max(axis=1)
-wage_min = wage.min(axis=1)
 wage_std = error_window(wage.std(axis=1))
-wage_max_real = (column_splitter(data, 1000, par=".11")).max(axis=1)
-wage_min_real = (column_splitter(data, 1000, par=".10")).min(axis=1)
+
+wage_max_mean =column_splitter(data, 1000, par=".11").mean(axis=1)
+wage_min_mean = column_splitter(data, 1000, par=".10").mean(axis=1)
+
 
 # ln-hopital mean [wealth] of workers
 wealth = column_splitter(data, 1000, par=".12")
 wealth_mean = wealth.mean(axis=1)
 wealth_median = wealth.median(axis=1)
-wealth_max = wealth.max(axis=1)
-wealth_min = wealth.min(axis=1)
 wealth_std = error_window(wealth.std(axis=1))
-wealth_max_real = (column_splitter(data, 1000, par=".13")).max(axis=1)
-wealth_min_real = (column_splitter(data, 1000, par=".14")).min(axis=1)
+
+wealth_max_mean = column_splitter(data, 1000, par=".13").mean(axis=1)
+wealth_min_mean = column_splitter(data, 1000, par=".14").mean(axis=1)
 
 # 100 * mean [my-interest-rate] of firms
 mult_interest_rate = column_splitter(data, 1000, par=".15")
 mult_interest_rate_mean = mult_interest_rate.mean(axis=1)
 mult_interest_rate_median = mult_interest_rate.median(axis=1)
-mult_interest_rate_max = mult_interest_rate.max(axis=1)
-mult_interest_rate_min = mult_interest_rate.min(axis=1)
 mult_interest_rate_std = error_window(mult_interest_rate.std(axis=1))
-mult_interest_rate_max_real = (column_splitter(data, 1000, par=".17")).max(axis=1)
-mult_interest_rate_min_real = (column_splitter(data, 1000, par=".16")).min(axis=1)
+
+mult_interest_rate_max_mean = column_splitter(data, 1000, par=".17").mean(axis=1)
+mult_interest_rate_min_mean = column_splitter(data, 1000, par=".16").mean(axis=1)
+
 
 # mean [my-interest-rate] of firms
 interest_rate = column_splitter(data, 1000, par=".18")
 interest_rate_mean = interest_rate.mean(axis=1)
 interest_rate_median = interest_rate.median(axis=1)
-interest_rate_max = interest_rate.max(axis=1)
-interest_rate_min = interest_rate.min(axis=1)
 interest_rate_std = error_window(interest_rate.std(axis=1))
-interest_rate_max_real = (column_splitter(data, 1000, par=".19")).max(axis=1)
-interest_rate_min_real = (column_splitter(data, 1000, par=".20")).min(axis=1)
+
+interest_rate_max_mean = column_splitter(data, 1000, par=".19").mean(axis=1)
+interest_rate_min_mean = column_splitter(data, 1000, par=".20").mean(axis=1)
+
 
 
 
@@ -183,11 +198,10 @@ interest_rate_min_real = (column_splitter(data, 1000, par=".20")).min(axis=1)
 
 x= np.arange(0,301)
 
-fig = make_subplots(rows=8, cols=2, 
-                    vertical_spacing=0.019, 
+fig = make_subplots(rows=6, cols=2, 
+                    vertical_spacing=0.019,
+                    horizontal_spacing=0.019,
                     specs=[[{"type": "scatter"}, {"type": "table"}],
-                           [{"type": "scatter"}, {"type": "table"}],
-                           [{"type": "scatter"}, {"type": "table"}],
                            [{"type": "scatter"}, {"type": "table"}],
                            [{"type": "scatter"}, {"type": "table"}],
                            [{"type": "scatter"}, {"type": "table"}],
@@ -195,21 +209,23 @@ fig = make_subplots(rows=8, cols=2,
                            [{"type": "scatter"}, {"type": "table"}]], 
                     x_title="tick", 
                     column_widths=[0.8, 0.2], 
-                    subplot_titles=("Unemployment rate",
-                                    "Nominal GDP", 
-                                    "Production of incumbent-firms",
-                                    "Production of incumbent-firms",
-                                    "wage-offered-Wb",
-                                    "Wealth of workers",
-                                    "Contractual interest rate",
-                                    "100*Contractual interest rate"))
+                    subplot_titles=("Unemployment rate","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick),
+                                    "Nominal GDP", "Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick),
+                                    "Production of firms","Indicators from "+ str(wind_from_tick) + "to " + str(wind_to_tick),
+                                    "wage-offered-Wb","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick),
+                                    "Wealth of workers","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick),
+                                    "Contractual interest rate","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick)))
 
 #count workers with [not employed?] / count workers
 fig.add_trace(go.Scatter(x=x,y=unemp_rate_max,name="max",line=dict(width=0.8)), row=1, col=1)
 fig.add_trace(go.Scatter(x=x,y=unemp_rate_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=unemp_rate_std, symmetric=True)),row=1, col=1)
 fig.add_trace(go.Scatter(x=x,y=unemp_rate_min,name="min",line=dict(width=0.8)), row=1, col=1)
                            
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=1, col=2)
+fig.add_trace(go.Table(header=dict(values=['Indicator', 'Score'], align=['left', 'center']), 
+                       cells=dict(values=[["Mean", "Median","Min", "Max"], [unemp_rate_wind_mean, 
+                                                                                unemp_rate_wind_median,
+                                                                                unemp_rate_wind_min,
+                                                                                unemp_rate_wind_max]], align=['left', 'center'])), row=1, col=2)
 
 
 # ln-hopital nominal-GDP
@@ -217,38 +233,42 @@ fig.add_trace(go.Scatter(x=x,y=nominal_GDP_max,name="max",line=dict(width=0.8)),
 fig.add_trace(go.Scatter(x=x,y=nominal_GDP_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=nominal_GDP_std, symmetric=True)),row=2, col=1)
 fig.add_trace(go.Scatter(x=x,y=nominal_GDP_min,name="min",line=dict(width=0.8)), row=2, col=1)
 
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=2, col=2)
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
+                       cells=dict(values=[[100, 90], [95, 85]])), row=2, col=2)
 
 
 # mean [production-Y] of firms
-fig.add_trace(go.Scatter(x=x,y=production_firm_max_real,name="max",line=dict(width=0.8)), row=4, col=1)
-fig.add_trace(go.Scatter(x=x,y=production_firm_median,name="median", line=dict(width=1.5),  error_y=dict(type='data', array=production_firm_std, symmetric=True)),row=4, col=1)
-fig.add_trace(go.Scatter(x=x,y=production_firm_min_real,name="min",line=dict(width=0.8)), row=4, col=1)
+fig.add_trace(go.Scatter(x=x,y=production_firm_max_mean,name="max",line=dict(width=0.8)), row=3, col=1)
+fig.add_trace(go.Scatter(x=x,y=production_firm_median,name="median", line=dict(width=1.5),  error_y=dict(type='data', array=production_firm_std, symmetric=True)),row=3, col=1)
+fig.add_trace(go.Scatter(x=x,y=production_firm_min_mean,name="min",line=dict(width=0.8)), row=3, col=1)
 
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=4, col=2)
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
+                       cells=dict(values=[[100, 90], [95, 85]])), row=3, col=2)
 
 
 # mean [wage-offered-Wb] of firms
-fig.add_trace(go.Scatter(x=x,y=wage_max_real,name="max",line=dict(width=0.8)), row=5, col=1)
-fig.add_trace(go.Scatter(x=x,y=wage_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=wage_std, symmetric=True)),row=5, col=1)
-fig.add_trace(go.Scatter(x=x,y=wage_min_real,name="min",line=dict(width=0.8)), row=5, col=1)
+fig.add_trace(go.Scatter(x=x,y=wage_max_mean,name="max",line=dict(width=0.8)), row=4, col=1)
+fig.add_trace(go.Scatter(x=x,y=wage_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=wage_std, symmetric=True)),row=4, col=1)
+fig.add_trace(go.Scatter(x=x,y=wage_min_mean,name="min",line=dict(width=0.8)), row=4, col=1)
 
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=5, col=2)
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
+                       cells=dict(values=[[100, 90], [95, 85]])), row=4, col=2)
 
 # ln-hopital mean [wealth] of workers
-fig.add_trace(go.Scatter(x=x,y=wealth_max_real,name="max",line=dict(width=0.8)), row=6, col=1)
-fig.add_trace(go.Scatter(x=x,y=wealth_median,name="median", line=dict(width=1.5),  error_y=dict(type='data', array=wealth_std, symmetric=True)),row=6, col=1)
-fig.add_trace(go.Scatter(x=x,y=wealth_min_real,name="min",line=dict(width=0.8)), row=6, col=1)
+fig.add_trace(go.Scatter(x=x,y=wealth_max_mean,name="max",line=dict(width=0.8)), row=5, col=1)
+fig.add_trace(go.Scatter(x=x,y=wealth_median,name="median", line=dict(width=1.5),  error_y=dict(type='data', array=wealth_std, symmetric=True)),row=5, col=1)
+fig.add_trace(go.Scatter(x=x,y=wealth_min_mean,name="min",line=dict(width=0.8)), row=5, col=1)
 
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=6, col=2)
-
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
+                       cells=dict(values=[[100, 90], [95, 85]])), row=5, col=2)
 
 # mean [my-interest-rate] of firms
-fig.add_trace(go.Scatter(x=x,y=interest_rate_max_real,name="max",line=dict(width=0.8)), row=8, col=1)
-fig.add_trace(go.Scatter(x=x,y=interest_rate_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=interest_rate_std, symmetric=True)),row=8, col=1)
-fig.add_trace(go.Scatter(x=x,y=interest_rate_min_real,name="min",line=dict(width=0.8)), row=8, col=1)
+fig.add_trace(go.Scatter(x=x,y=interest_rate_max_mean,name="max",line=dict(width=0.8)), row=6, col=1)
+fig.add_trace(go.Scatter(x=x,y=interest_rate_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=interest_rate_std, symmetric=True)),row=6, col=1)
+fig.add_trace(go.Scatter(x=x,y=interest_rate_min_mean,name="min",line=dict(width=0.8)), row=6, col=1)
 
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), cells=dict(values=[[100, 90], [95, 85]])), row=8, col=2)
+fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
+                       cells=dict(values=[[100, 90], [95, 85]])), row=6, col=2)
 
 
 fig.update_layout(height=2600, width=1600, showlegend=False)

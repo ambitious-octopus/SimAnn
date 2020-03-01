@@ -13,6 +13,7 @@ from plotly.offline import plot
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import plotly.express as px
+from scipy import stats
 
 
 def reader(file):
@@ -102,14 +103,18 @@ def wind_selector(serie,from_tick,to_tick):
 
 
 #%%
-#CALCOLO GLI INDICATORI SULLE DIMESIONI PRESE IN ESAME E SULLE WINDOW
+#PARAMETRI PER IL CALCOLO DEGLI INDICATORI
 
 wind_from_tick = 280
 wind_to_tick = 300
 wind_range = wind_to_tick - wind_from_tick
+x_wind_reg= np.arange(151,302)
+x_all_reg=np.arange(302)
 
 
-# count workers with [not employed?] / count workers
+#%% UNEMPLOYMET RATE (count workers with [not employed?] / count workers)
+
+#Indicatori intera curva
 unemp_rate = column_splitter(data, 1000, par="")
 unemp_rate_mean = unemp_rate.mean(axis=1)
 unemp_rate_median = unemp_rate.median(axis=1)
@@ -117,16 +122,21 @@ unemp_rate_max = unemp_rate.max(axis=1)
 unemp_rate_min = unemp_rate.min(axis=1)
 unemp_rate_std = error_window(unemp_rate.std(axis=1))
 
-
+#Indicatori Window
 unemp_rate_wind = wind_selector(unemp_rate,wind_from_tick,wind_to_tick).mean(axis=1)
-unemp_rate_wind_mean = round(unemp_rate_wind.mean(), 2)
-unemp_rate_wind_median = unemp_rate_wind.median()
-unemp_rate_wind_std = round(unemp_rate_wind.std(),2)
-unemp_rate_wind_min = unemp_rate_wind.min()
-unemp_rate_wind_max = unemp_rate_wind.max()
+unemp_rate_wind_mean = round(unemp_rate_wind.mean(), 6)
+unemp_rate_wind_median = round(unemp_rate_wind.median(), 6)
+unemp_rate_wind_std = round(unemp_rate_wind.std(),6)
+unemp_rate_wind_min = round(unemp_rate_wind.min(), 6)
+unemp_rate_wind_max = round(unemp_rate_wind.max(), 6)
+
+#Retta di regressione
+unemp_rate_slope, unemp_rate_intercept, unemp_rate_r_value, unemp_rate_p_value, unemp_rate_std_err = stats.linregress(x_wind_reg, unemp_rate_mean[150:302])
+unemp_rate_reg_line = unemp_rate_slope * x_all_reg + unemp_rate_intercept 
 
 
-# ln-hopital nominal-GDP
+
+#%% ln-hopital nominal-GDP
 nominal_GDP = column_splitter(data, 1000, par=".1")
 nominal_GDP_mean = nominal_GDP.mean(axis=1)
 nominal_GDP_median = nominal_GDP.median(axis=1)
@@ -134,7 +144,12 @@ nominal_GDP_max = nominal_GDP.max(axis=1)
 nominal_GDP_min = nominal_GDP.min(axis=1)
 nominal_GDP_std = error_window(nominal_GDP.std(axis=1))
 
-# mean [production-Y] of fn-incumbent-firms
+
+
+
+
+
+#%% mean [production-Y] of fn-incumbent-firms
 production_inc_firm = column_splitter(data, 1000, par=".4")
 production_inc_firm_mean = production_inc_firm.mean(axis=1)
 production_inc_firm_median = production_inc_firm.median(axis=1)
@@ -209,26 +224,30 @@ fig = make_subplots(rows=6, cols=2,
                            [{"type": "scatter"}, {"type": "table"}]], 
                     x_title="tick", 
                     column_widths=[0.8, 0.2], 
-                    subplot_titles=("Unemployment rate","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick),
-                                    "Nominal GDP", "Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick),
-                                    "Production of firms","Indicators from "+ str(wind_from_tick) + "to " + str(wind_to_tick),
-                                    "wage-offered-Wb","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick),
-                                    "Wealth of workers","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick),
-                                    "Contractual interest rate","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick)))
+                    subplot_titles=("Unemployment rate","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick) + "(tick)",
+                                    "Nominal GDP", "Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick)+ "(tick)",
+                                    "Production of firms","Indicators from "+ str(wind_from_tick) + "to " + str(wind_to_tick)+ "(tick)",
+                                    "Wage Offered","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick)+ "(tick)",
+                                    "Wealth of workers","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick)+ "(tick)",
+                                    "Contractual interest rate","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick)+ "(tick)"))
 
-#count workers with [not employed?] / count workers
+#Unemployment rate
 fig.add_trace(go.Scatter(x=x,y=unemp_rate_max,name="max",line=dict(width=0.8)), row=1, col=1)
 fig.add_trace(go.Scatter(x=x,y=unemp_rate_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=unemp_rate_std, symmetric=True)),row=1, col=1)
 fig.add_trace(go.Scatter(x=x,y=unemp_rate_min,name="min",line=dict(width=0.8)), row=1, col=1)
+fig.add_trace(go.Scatter(x=x,y=unemp_rate_reg_line,name="reg_LINE",line=dict(width=0.5)), row=1, col=1)
+
+
                            
 fig.add_trace(go.Table(header=dict(values=['Indicator', 'Score'], align=['left', 'center']), 
-                       cells=dict(values=[["Mean", "Median","Min", "Max"], [unemp_rate_wind_mean, 
-                                                                                unemp_rate_wind_median,
-                                                                                unemp_rate_wind_min,
-                                                                                unemp_rate_wind_max]], align=['left', 'center'])), row=1, col=2)
+                       cells=dict(values=[["Mean", "Median","Min", "Max", "Std"], [unemp_rate_wind_mean, 
+                                                                            unemp_rate_wind_median,
+                                                                            unemp_rate_wind_min,
+                                                                            unemp_rate_wind_max,
+                                                                            unemp_rate_wind_std]], align=['left', 'left'])), row=1, col=2)
 
 
-# ln-hopital nominal-GDP
+# Nominal GDP
 fig.add_trace(go.Scatter(x=x,y=nominal_GDP_max,name="max",line=dict(width=0.8)), row=2, col=1)
 fig.add_trace(go.Scatter(x=x,y=nominal_GDP_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=nominal_GDP_std, symmetric=True)),row=2, col=1)
 fig.add_trace(go.Scatter(x=x,y=nominal_GDP_min,name="min",line=dict(width=0.8)), row=2, col=1)
@@ -237,7 +256,7 @@ fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']),
                        cells=dict(values=[[100, 90], [95, 85]])), row=2, col=2)
 
 
-# mean [production-Y] of firms
+# Production of firms
 fig.add_trace(go.Scatter(x=x,y=production_firm_max_mean,name="max",line=dict(width=0.8)), row=3, col=1)
 fig.add_trace(go.Scatter(x=x,y=production_firm_median,name="median", line=dict(width=1.5),  error_y=dict(type='data', array=production_firm_std, symmetric=True)),row=3, col=1)
 fig.add_trace(go.Scatter(x=x,y=production_firm_min_mean,name="min",line=dict(width=0.8)), row=3, col=1)
@@ -246,7 +265,7 @@ fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']),
                        cells=dict(values=[[100, 90], [95, 85]])), row=3, col=2)
 
 
-# mean [wage-offered-Wb] of firms
+# Wage Offered
 fig.add_trace(go.Scatter(x=x,y=wage_max_mean,name="max",line=dict(width=0.8)), row=4, col=1)
 fig.add_trace(go.Scatter(x=x,y=wage_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=wage_std, symmetric=True)),row=4, col=1)
 fig.add_trace(go.Scatter(x=x,y=wage_min_mean,name="min",line=dict(width=0.8)), row=4, col=1)
@@ -254,7 +273,7 @@ fig.add_trace(go.Scatter(x=x,y=wage_min_mean,name="min",line=dict(width=0.8)), r
 fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
                        cells=dict(values=[[100, 90], [95, 85]])), row=4, col=2)
 
-# ln-hopital mean [wealth] of workers
+# Wealth of workers
 fig.add_trace(go.Scatter(x=x,y=wealth_max_mean,name="max",line=dict(width=0.8)), row=5, col=1)
 fig.add_trace(go.Scatter(x=x,y=wealth_median,name="median", line=dict(width=1.5),  error_y=dict(type='data', array=wealth_std, symmetric=True)),row=5, col=1)
 fig.add_trace(go.Scatter(x=x,y=wealth_min_mean,name="min",line=dict(width=0.8)), row=5, col=1)
@@ -262,13 +281,16 @@ fig.add_trace(go.Scatter(x=x,y=wealth_min_mean,name="min",line=dict(width=0.8)),
 fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
                        cells=dict(values=[[100, 90], [95, 85]])), row=5, col=2)
 
-# mean [my-interest-rate] of firms
+# Contractual interest rate
 fig.add_trace(go.Scatter(x=x,y=interest_rate_max_mean,name="max",line=dict(width=0.8)), row=6, col=1)
 fig.add_trace(go.Scatter(x=x,y=interest_rate_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=interest_rate_std, symmetric=True)),row=6, col=1)
 fig.add_trace(go.Scatter(x=x,y=interest_rate_min_mean,name="min",line=dict(width=0.8)), row=6, col=1)
 
 fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
                        cells=dict(values=[[100, 90], [95, 85]])), row=6, col=2)
+
+
+
 
 
 fig.update_layout(height=2600, width=1600, showlegend=False)

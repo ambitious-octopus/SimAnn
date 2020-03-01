@@ -112,8 +112,8 @@ unemp_rate_std = error_window(unemp_rate.std(axis=1))
 prova = np.zeros(150)
 x= np.arange(151,302)
 serie = (np.concatenate((prova,x), axis=None))
-slope, intercept, r_value, p_value, std_err = stats.linregress(x, unemp_rate_mean.iloc[150:301])
-reg = intercept + slope*serie
+slope, intercept, r_value, p_value, std_err = stats.linregress(x, unemp_rate_mean)
+reg = intercept + slope * serie
 
 
 # ln-hopital nominal-GDP

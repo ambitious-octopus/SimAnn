@@ -112,7 +112,7 @@ x_wind_reg= np.arange(151,302)
 x_all_reg=np.arange(302)
 
 
-#%% UNEMPLOYMET RATE (count workers with [not employed?] / count workers)
+#%% UNEMPLOYEMENT RATE (count workers with [not employed?] / count workers)
 
 #Indicatori intera curva
 unemp_rate = column_splitter(data, 1000, par="")
@@ -136,7 +136,9 @@ unemp_rate_reg_line = unemp_rate_slope * x_all_reg + unemp_rate_intercept
 
 
 
-#%% ln-hopital nominal-GDP
+#%% NOMINAL GDP (ln-hopital nominal-GDP)
+
+#Indicatori intera curva
 nominal_GDP = column_splitter(data, 1000, par=".1")
 nominal_GDP_mean = nominal_GDP.mean(axis=1)
 nominal_GDP_median = nominal_GDP.median(axis=1)
@@ -144,72 +146,116 @@ nominal_GDP_max = nominal_GDP.max(axis=1)
 nominal_GDP_min = nominal_GDP.min(axis=1)
 nominal_GDP_std = error_window(nominal_GDP.std(axis=1))
 
+#Indicatori Window
+nominal_GDP_wind = wind_selector(nominal_GDP,wind_from_tick,wind_to_tick).mean(axis=1)
+nominal_GDP_wind_mean = round(nominal_GDP_wind.mean(), 6)
+nominal_GDP_wind_median = round(nominal_GDP_wind.median(), 6)
+nominal_GDP_wind_std = round(nominal_GDP_wind.std(),6)
+nominal_GDP_wind_min = round(nominal_GDP_wind.min(), 6)
+nominal_GDP_wind_max = round(nominal_GDP_wind.max(), 6)
+
+#Retta di regressione
+nominal_GDP_slope, nominal_GDP_intercept, nominal_GDP_r_value, nominal_GDP_p_value, nominal_GDP_std_err = stats.linregress(x_wind_reg, nominal_GDP_mean[150:302])
+nominal_GDP_reg_line = nominal_GDP_slope * x_all_reg + nominal_GDP_intercept 
 
 
+#%% PRODUCTION OF FIRMS (mean [production-Y] of firms
 
-
-
-#%% mean [production-Y] of fn-incumbent-firms
-production_inc_firm = column_splitter(data, 1000, par=".4")
-production_inc_firm_mean = production_inc_firm.mean(axis=1)
-production_inc_firm_median = production_inc_firm.median(axis=1)
-production_inc_firm_std = error_window(production_inc_firm.std(axis=1))
-
-production_inc_firm_max_mean = column_splitter(data, 1000, par=".3").mean(axis=1)
-production_inc_firm_min_mean = column_splitter(data, 1000, par=".5").mean(axis=1)
-
-# mean [production-Y] of firms
+#Indicatori intera curva
 production_firm = column_splitter(data, 1000, par=".7")
 production_firm_mean = production_firm.mean(axis=1)
 production_firm_median = production_firm.median(axis=1)
-production_firm_std = error_window(production_firm.std(axis=1))
-
 production_firm_max_mean = column_splitter(data, 1000, par=".6").mean(axis=1)
 production_firm_min_mean = column_splitter(data, 1000, par=".8").mean(axis=1)
+production_firm_std = error_window(production_firm.std(axis=1))
 
-# mean [wage-offered-Wb] of firms
+#Indicatori Window
+production_firm_wind = wind_selector(production_firm,wind_from_tick,wind_to_tick).mean(axis=1)
+production_firm_wind_mean = round(production_firm_wind.mean(), 6)
+production_firm_wind_median = round(production_firm_wind.median(), 6)
+production_firm_wind_std = round(production_firm_wind.std(),6)
+production_firm_wind_min = wind_selector(production_firm_min_mean, wind_from_tick, wind_to_tick).mean()
+production_firm_wind_max = wind_selector(production_firm_max_mean, wind_from_tick, wind_to_tick).mean()
+
+#Retta di regressione
+production_firm_slope, production_firm_intercept, production_firm_r_value, production_firm_p_value, production_firm_std_err = stats.linregress(x_wind_reg, production_firm_mean[150:302])
+production_firm_reg_line = production_firm_slope * x_all_reg + production_firm_intercept 
+
+
+#%% WAGE OFFERED (mean [wage-offered-Wb] of firms)
+
+#Indicatori intera curva
 wage = column_splitter(data, 1000, par=".9")
 wage_mean = wage.mean(axis=1)
 wage_median = wage.median(axis=1)
 wage_std = error_window(wage.std(axis=1))
-
 wage_max_mean =column_splitter(data, 1000, par=".11").mean(axis=1)
 wage_min_mean = column_splitter(data, 1000, par=".10").mean(axis=1)
 
+#Indicatori Window
+wage_wind = wind_selector(wage,wind_from_tick,wind_to_tick).mean(axis=1)
+wage_wind_mean = round(production_firm_wind.mean(), 6)
+wage_wind_median = round(production_firm_wind.median(), 6)
+wage_wind_std = round(production_firm_wind.std(),6)
+wage_wind_min = wind_selector(wage_min_mean, wind_from_tick, wind_to_tick).mean()
+wage_wind_max = wind_selector(wage_max_mean, wind_from_tick, wind_to_tick).mean()
 
-# ln-hopital mean [wealth] of workers
+#Retta di regressione
+wage_slope, wage_intercept, wage_r_value, wage_p_value, wage_std_err = stats.linregress(x_wind_reg, wage_mean[150:302])
+wage_reg_line = wage_slope * x_all_reg + wage_intercept 
+
+
+
+#%% WEALTH (ln-hopital mean [wealth] of workers)
+
+
+#Indicatori intera curva
 wealth = column_splitter(data, 1000, par=".12")
 wealth_mean = wealth.mean(axis=1)
 wealth_median = wealth.median(axis=1)
 wealth_std = error_window(wealth.std(axis=1))
-
 wealth_max_mean = column_splitter(data, 1000, par=".13").mean(axis=1)
 wealth_min_mean = column_splitter(data, 1000, par=".14").mean(axis=1)
 
-# 100 * mean [my-interest-rate] of firms
-mult_interest_rate = column_splitter(data, 1000, par=".15")
-mult_interest_rate_mean = mult_interest_rate.mean(axis=1)
-mult_interest_rate_median = mult_interest_rate.median(axis=1)
-mult_interest_rate_std = error_window(mult_interest_rate.std(axis=1))
+#Indicatori Window
+wealth_wind = wind_selector(wealth,wind_from_tick,wind_to_tick).mean(axis=1)
+wealth_wind_mean = round(wealth_wind.mean(), 6)
+wealth_wind_median = round(wealth_wind.median(), 6)
+wealth_wind_std = round(wealth_wind.std(),6)
+wealth_wind_min = wind_selector(wealth_mean, wind_from_tick, wind_to_tick).mean()
+wealth_wind_max = wind_selector(wealth_mean, wind_from_tick, wind_to_tick).mean()
 
-mult_interest_rate_max_mean = column_splitter(data, 1000, par=".17").mean(axis=1)
-mult_interest_rate_min_mean = column_splitter(data, 1000, par=".16").mean(axis=1)
+#Retta di regressione
+wealth_slope, wealth_intercept, wealth_r_value, wealth_p_value, wealth_std_err = stats.linregress(x_wind_reg, wealth_mean[150:302])
+wealth_reg_line = wealth_slope * x_all_reg + wealth_intercept 
 
 
-# mean [my-interest-rate] of firms
+#%% INTEREST RATE (mean [my-interest-rate] of firms)
+
+
+#Indicatori intera curva
 interest_rate = column_splitter(data, 1000, par=".18")
 interest_rate_mean = interest_rate.mean(axis=1)
 interest_rate_median = interest_rate.median(axis=1)
 interest_rate_std = error_window(interest_rate.std(axis=1))
-
 interest_rate_max_mean = column_splitter(data, 1000, par=".19").mean(axis=1)
 interest_rate_min_mean = column_splitter(data, 1000, par=".20").mean(axis=1)
 
+#Indicatori Window
+interest_rate_wind = wind_selector(interest_rate,wind_from_tick,wind_to_tick).mean(axis=1)
+interest_rate_wind_mean = round(interest_rate_wind.mean(), 6)
+interest_rate_wind_median = round(interest_rate_wind.median(), 6)
+interest_rate_wind_std = round(interest_rate_wind.std(),6)
+interest_rate_wind_min = wind_selector(interest_rate_mean, wind_from_tick, wind_to_tick).mean()
+interest_rate_wind_max = wind_selector(interest_rate_mean, wind_from_tick, wind_to_tick).mean()
+
+#Retta di regressione
+interest_rate_slope, interest_rate_intercept, interest_rate_r_value, interest_rate_p_value, interest_rate_std_err = stats.linregress(x_wind_reg, interest_rate_mean[150:302])
+interest_rate_reg_line = interest_rate_slope * x_all_reg + interest_rate_intercept 
 
 
 
-#%%
-# GRAFICO
+#%% GRAFICO
 
 x= np.arange(0,301)
 
@@ -224,70 +270,180 @@ fig = make_subplots(rows=6, cols=2,
                            [{"type": "scatter"}, {"type": "table"}]], 
                     x_title="tick", 
                     column_widths=[0.8, 0.2], 
-                    subplot_titles=("Unemployment rate","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick) + "(tick)",
-                                    "Nominal GDP", "Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick)+ "(tick)",
-                                    "Production of firms","Indicators from "+ str(wind_from_tick) + "to " + str(wind_to_tick)+ "(tick)",
-                                    "Wage Offered","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick)+ "(tick)",
-                                    "Wealth of workers","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick)+ "(tick)",
-                                    "Contractual interest rate","Indicators from "+ str(wind_from_tick) + " to " + str(wind_to_tick)+ "(tick)"))
+                    subplot_titles=("Unemployment rate","Indicators (tick)",
+                                    "Nominal GDP", "Indicators (tick)",
+                                    "Production of firms","Indicators (tick)",
+                                    "Wage Offered","Indicators (tick)",
+                                    "Wealth of workers","Indicators (tick)",
+                                    "Contractual interest rate","Indicators (tick)"))
 
-#Unemployment rate
+#%% Unemployment rate
 fig.add_trace(go.Scatter(x=x,y=unemp_rate_max,name="max",line=dict(width=0.8)), row=1, col=1)
-fig.add_trace(go.Scatter(x=x,y=unemp_rate_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=unemp_rate_std, symmetric=True)),row=1, col=1)
+fig.add_trace(go.Scatter(x=x,y=unemp_rate_median,name="median", line=dict(width=1.0), error_y=dict(type='data', array=unemp_rate_std, symmetric=True)),row=1, col=1)
 fig.add_trace(go.Scatter(x=x,y=unemp_rate_min,name="min",line=dict(width=0.8)), row=1, col=1)
-fig.add_trace(go.Scatter(x=x,y=unemp_rate_reg_line,name="reg_LINE",line=dict(width=0.5)), row=1, col=1)
-
-
+fig.add_trace(go.Scatter(x=x,y=unemp_rate_reg_line,name="reg_line",line=dict(width=0.5)), row=1, col=1)
                            
 fig.add_trace(go.Table(header=dict(values=['Indicator', 'Score'], align=['left', 'center']), 
-                       cells=dict(values=[["Mean", "Median","Min", "Max", "Std"], [unemp_rate_wind_mean, 
+                       cells=dict(values=[["Mean (280-300)", 
+                                           "Median (280-300)",
+                                           "Min (280-300)", 
+                                           "Max (280-300)", 
+                                           "Std (280-300)", 
+                                           "Reg-line Slope (150-300)", 
+                                           "Reg-line Intercept (150-300)",
+                                           "Reg-line r-value (150-300)",
+                                           "Reg-line p-value (150-300)",
+                                           "Reg-line std error (150-300)"], [unemp_rate_wind_mean, 
                                                                             unemp_rate_wind_median,
                                                                             unemp_rate_wind_min,
                                                                             unemp_rate_wind_max,
-                                                                            unemp_rate_wind_std]], align=['left', 'left'])), row=1, col=2)
+                                                                            unemp_rate_wind_std,
+                                                                            round(unemp_rate_slope,6),
+                                                                            round(unemp_rate_intercept,6),
+                                                                            round(unemp_rate_r_value,6),
+                                                                            round(unemp_rate_p_value,6),
+                                                                            round(unemp_rate_std_err,6)]], align=['left', 'left'])), row=1, col=2)
 
 
-# Nominal GDP
+#%% Nominal GDP
 fig.add_trace(go.Scatter(x=x,y=nominal_GDP_max,name="max",line=dict(width=0.8)), row=2, col=1)
-fig.add_trace(go.Scatter(x=x,y=nominal_GDP_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=nominal_GDP_std, symmetric=True)),row=2, col=1)
+fig.add_trace(go.Scatter(x=x,y=nominal_GDP_median,name="median", line=dict(width=1.0), error_y=dict(type='data', array=nominal_GDP_std, symmetric=True)),row=2, col=1)
 fig.add_trace(go.Scatter(x=x,y=nominal_GDP_min,name="min",line=dict(width=0.8)), row=2, col=1)
+fig.add_trace(go.Scatter(x=x,y=nominal_GDP_reg_line,name="reg_line",line=dict(width=0.5)), row=2, col=1)
+                           
+fig.add_trace(go.Table(header=dict(values=['Indicator', 'Score'], align=['left', 'center']), 
+                       cells=dict(values=[["Mean (280-300)", 
+                                           "Median (280-300)",
+                                           "Min (280-300)", 
+                                           "Max (280-300)", 
+                                           "Std (280-300)", 
+                                           "Reg-line Slope (150-300)", 
+                                           "Reg-line Intercept (150-300)",
+                                           "Reg-line r-value (150-300)",
+                                           "Reg-line p-value (150-300)",
+                                           "Reg-line std error (150-300)"], [nominal_GDP_wind_mean, 
+                                                                            nominal_GDP_wind_median,
+                                                                            nominal_GDP_wind_min,
+                                                                            nominal_GDP_wind_max,
+                                                                            nominal_GDP_wind_std,
+                                                                            round(nominal_GDP_slope,6),
+                                                                            round(nominal_GDP_intercept,6),
+                                                                            round(nominal_GDP_r_value,6),
+                                                                            round(nominal_GDP_p_value,6),
+                                                                            round(nominal_GDP_std_err,6)]], align=['left', 'left'])), row=2, col=2)
 
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
-                       cells=dict(values=[[100, 90], [95, 85]])), row=2, col=2)
 
-
-# Production of firms
+#%% Production of firms
 fig.add_trace(go.Scatter(x=x,y=production_firm_max_mean,name="max",line=dict(width=0.8)), row=3, col=1)
-fig.add_trace(go.Scatter(x=x,y=production_firm_median,name="median", line=dict(width=1.5),  error_y=dict(type='data', array=production_firm_std, symmetric=True)),row=3, col=1)
+fig.add_trace(go.Scatter(x=x,y=production_firm_median,name="median", line=dict(width=1.0), error_y=dict(type='data', array=production_firm_std, symmetric=True)),row=3, col=1)
 fig.add_trace(go.Scatter(x=x,y=production_firm_min_mean,name="min",line=dict(width=0.8)), row=3, col=1)
+fig.add_trace(go.Scatter(x=x,y=production_firm_reg_line,name="reg_line",line=dict(width=0.5)), row=3, col=1)
+                           
+fig.add_trace(go.Table(header=dict(values=['Indicator', 'Score'], align=['left', 'center']), 
+                       cells=dict(values=[["Mean (280-300)", 
+                                           "Median (280-300)",
+                                           "Min (280-300)", 
+                                           "Max (280-300)", 
+                                           "Std (280-300)", 
+                                           "Reg-line Slope (150-300)", 
+                                           "Reg-line Intercept (150-300)",
+                                           "Reg-line r-value (150-300)",
+                                           "Reg-line p-value (150-300)",
+                                           "Reg-line std error (150-300)"], [production_firm_wind_mean, 
+                                                                            production_firm_wind_median,
+                                                                            round(production_firm_wind_min,6),
+                                                                            round(production_firm_wind_max, 6),
+                                                                            production_firm_wind_std,
+                                                                            round(production_firm_slope,6),
+                                                                            round(production_firm_intercept,6),
+                                                                            round(production_firm_r_value,6),
+                                                                            round(production_firm_p_value,6),
+                                                                            round(production_firm_std_err,6)]], align=['left', 'left'])), row=3, col=2)
+                                                                                                                 
+                                                                            
 
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
-                       cells=dict(values=[[100, 90], [95, 85]])), row=3, col=2)
 
-
-# Wage Offered
+#%% Wage Offered
 fig.add_trace(go.Scatter(x=x,y=wage_max_mean,name="max",line=dict(width=0.8)), row=4, col=1)
-fig.add_trace(go.Scatter(x=x,y=wage_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=wage_std, symmetric=True)),row=4, col=1)
+fig.add_trace(go.Scatter(x=x,y=wage_median,name="median", line=dict(width=1.0), error_y=dict(type='data', array=wage_std, symmetric=True)),row=4, col=1)
 fig.add_trace(go.Scatter(x=x,y=wage_min_mean,name="min",line=dict(width=0.8)), row=4, col=1)
+fig.add_trace(go.Scatter(x=x,y=wage_reg_line,name="reg_line",line=dict(width=0.5)), row=4, col=1)
+                           
+fig.add_trace(go.Table(header=dict(values=['Indicator', 'Score'], align=['left', 'center']), 
+                       cells=dict(values=[["Mean (280-300)", 
+                                           "Median (280-300)",
+                                           "Min (280-300)", 
+                                           "Max (280-300)", 
+                                           "Std (280-300)", 
+                                           "Reg-line Slope (150-300)", 
+                                           "Reg-line Intercept (150-300)",
+                                           "Reg-line r-value (150-300)",
+                                           "Reg-line p-value (150-300)",
+                                           "Reg-line std error (150-300)"], [wage_wind_mean, 
+                                                                            wage_wind_median,
+                                                                            round(wage_wind_min, 6),
+                                                                            round(wage_wind_max, 6),
+                                                                            wage_wind_std,
+                                                                            round(wage_slope,6),
+                                                                            round(wage_intercept,6),
+                                                                            round(wage_r_value,6),
+                                                                            round(wage_p_value,6),
+                                                                            round(wage_std_err,6)]], align=['left', 'left'])), row=4, col=2)
 
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
-                       cells=dict(values=[[100, 90], [95, 85]])), row=4, col=2)
-
-# Wealth of workers
+#%% Wealth of workers
 fig.add_trace(go.Scatter(x=x,y=wealth_max_mean,name="max",line=dict(width=0.8)), row=5, col=1)
-fig.add_trace(go.Scatter(x=x,y=wealth_median,name="median", line=dict(width=1.5),  error_y=dict(type='data', array=wealth_std, symmetric=True)),row=5, col=1)
+fig.add_trace(go.Scatter(x=x,y=wealth_median,name="median", line=dict(width=1.0), error_y=dict(type='data', array=wealth_std, symmetric=True)),row=5, col=1)
 fig.add_trace(go.Scatter(x=x,y=wealth_min_mean,name="min",line=dict(width=0.8)), row=5, col=1)
+fig.add_trace(go.Scatter(x=x,y=wealth_reg_line,name="reg_line",line=dict(width=0.5)), row=5, col=1)
+                           
+fig.add_trace(go.Table(header=dict(values=['Indicator', 'Score'], align=['left', 'center']), 
+                       cells=dict(values=[["Mean (280-300)", 
+                                           "Median (280-300)",
+                                           "Min (280-300)", 
+                                           "Max (280-300)", 
+                                           "Std (280-300)", 
+                                           "Reg-line Slope (150-300)", 
+                                           "Reg-line Intercept (150-300)",
+                                           "Reg-line r-value (150-300)",
+                                           "Reg-line p-value (150-300)",
+                                           "Reg-line std error (150-300)"], [wealth_wind_mean, 
+                                                                            wealth_wind_median,
+                                                                            round(wealth_wind_min,6),
+                                                                            round(wealth_wind_max, 6),
+                                                                            wealth_wind_std,
+                                                                            round(wealth_slope,6),
+                                                                            round(wealth_intercept,6),
+                                                                            round(wealth_r_value,6),
+                                                                            round(wealth_p_value,6),
+                                                                            round(wealth_std_err,6)]], align=['left', 'left'])), row=5, col=2)
 
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
-                       cells=dict(values=[[100, 90], [95, 85]])), row=5, col=2)
-
-# Contractual interest rate
+#%% Contractual interest rate
 fig.add_trace(go.Scatter(x=x,y=interest_rate_max_mean,name="max",line=dict(width=0.8)), row=6, col=1)
-fig.add_trace(go.Scatter(x=x,y=interest_rate_median,name="median", line=dict(width=1.5), error_y=dict(type='data', array=interest_rate_std, symmetric=True)),row=6, col=1)
+fig.add_trace(go.Scatter(x=x,y=interest_rate_median,name="median", line=dict(width=1.0), error_y=dict(type='data', array=interest_rate_std, symmetric=True)),row=6, col=1)
 fig.add_trace(go.Scatter(x=x,y=interest_rate_min_mean,name="min",line=dict(width=0.8)), row=6, col=1)
+fig.add_trace(go.Scatter(x=x,y=interest_rate_reg_line,name="reg_line",line=dict(width=0.5)), row=6, col=1)
+                           
+fig.add_trace(go.Table(header=dict(values=['Indicator', 'Score'], align=['left', 'center']), 
+                       cells=dict(values=[["Mean (280-300)", 
+                                           "Median (280-300)",
+                                           "Min (280-300)", 
+                                           "Max (280-300)", 
+                                           "Std (280-300)", 
+                                           "Reg-line Slope (150-300)", 
+                                           "Reg-line Intercept (150-300)",
+                                           "Reg-line r-value (150-300)",
+                                           "Reg-line p-value (150-300)",
+                                           "Reg-line std error (150-300)"], [interest_rate_wind_mean, 
+                                                                            interest_rate_wind_median,
+                                                                            round(interest_rate_wind_min,6),
+                                                                            round(interest_rate_wind_max, 6),
+                                                                            interest_rate_wind_std,
+                                                                            round(interest_rate_slope,6),
+                                                                            round(interest_rate_intercept,6),
+                                                                            round(interest_rate_r_value,6),
+                                                                            round(interest_rate_p_value,6),
+                                                                            round(interest_rate_std_err,6)]], align=['left', 'left'])), row=6, col=2)
 
-fig.add_trace(go.Table(header=dict(values=['A Scores', 'B Scores']), 
-                       cells=dict(values=[[100, 90], [95, 85]])), row=6, col=2)
 
 
 

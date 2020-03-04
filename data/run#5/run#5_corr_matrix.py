@@ -100,6 +100,13 @@ def error_window(series):
             series[index] = "null"
     return series
 
+#funzione che droppa gli ultimi 20 tick da 280 a 300
+def last_ticks(data,tick_1,tick_2):
+    splitted_data = data.iloc[tick_1:tick_2]
+    mean_data= data.mean(axis=0)
+    return mean_data,splitted_data
+
+
 #%%
 #CALCOLO GLI INDICATORI SULLE DIMESIONI PRESE IN ESAME
 
@@ -185,26 +192,41 @@ interest_rate_min_real = (column_splitter(data, 1000, par=".20")).min(axis=1)
 
 mixing = {"unemp_rate" : unemp_rate_mean, 
           "nominal_GDP" : nominal_GDP_mean,
-          "production_inc_firm" : production_inc_firm_mean,
           "production_firm" : production_firm_mean,
           "wage" : wage_mean,
           "wealth" : wealth_mean,
-          "mult_interest_rate" : mult_interest_rate_mean,
-          "interest_rate" : interest_rate_mean}
+          "interest_rate" : interest_rate_mean,
+          "tick" : np.arange(301)}
 
 data_mean_mixed = pd.DataFrame(mixing)
 
 data_mean_mixed.corr()
 
-sns.set(style="ticks")
+# sns.set(style="ticks")
 
-sns.pairplot(data_mean_mixed)
-
-
+# sns.pairplot(data_mean_mixed)
 
 
+unemp_rate_last_ticks= last_ticks(unemp_rate,279,301)
+nominal_GDP_last_ticks= last_ticks(nominal_GDP,279,301)
+production_firm_last_ticks=last_ticks(production_firm,279,301)
+wage_last_ticks= last_ticks(wage,279,301)
+wealth_last_ticks= last_ticks(wealth,279,301)
+interest_rate_last_ticks= last_ticks(interest_rate,279,301)
+
+mixing_last_ticks = {"unemp_rate" : unemp_rate_last_ticks, 
+                     "nominal_GDP" : nominal_GDP_last_ticks,
+                     "production_firm" : production_firm_last_ticks,
+                     "wage" : wage_last_ticks,
+                     "wealth" : wealth_last_ticks,
+                     "interest_rate" : interest_rate_last_ticks}
+
+data_wind_mixed = pd.DataFrame(mixing_last_ticks)
 
 
+fig = px.scatter_matrix(data_wind_mixed)
+fig.update_traces(diagonal_visible=False)
+plot(fig)
 
 
 

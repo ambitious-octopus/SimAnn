@@ -100,11 +100,11 @@ def error_window(series):
             series[index] = "null"
     return series
 
-#funzione che droppa gli ultimi 20 tick da 280 a 300
+#funzione che droppa da tick_1 a tick_2
 def last_ticks(data,tick_1,tick_2):
     splitted_data = data.iloc[tick_1:tick_2]
-    mean_data= data.mean(axis=0)
-    return mean_data,splitted_data
+    mean_data= splitted_data.mean(axis=0)
+    return mean_data
 
 
 #%%
@@ -207,12 +207,12 @@ data_mean_mixed.corr()
 # sns.pairplot(data_mean_mixed)
 
 
-unemp_rate_last_ticks= last_ticks(unemp_rate,279,301)
-nominal_GDP_last_ticks= last_ticks(nominal_GDP,279,301)
-production_firm_last_ticks=last_ticks(production_firm,279,301)
-wage_last_ticks= last_ticks(wage,279,301)
-wealth_last_ticks= last_ticks(wealth,279,301)
-interest_rate_last_ticks= last_ticks(interest_rate,279,301)
+unemp_rate_last_ticks = np.array(last_ticks(unemp_rate,279,301))
+nominal_GDP_last_ticks = np.array(last_ticks(nominal_GDP,279,301))
+production_firm_last_ticks = np.array(last_ticks(production_firm,279,301))
+wage_last_ticks = np.array(last_ticks(wage,279,301))
+wealth_last_ticks = np.array(last_ticks(wealth,279,301))
+interest_rate_last_ticks = np.array(last_ticks(interest_rate,279,301))
 
 mixing_last_ticks = {"unemp_rate" : unemp_rate_last_ticks, 
                      "nominal_GDP" : nominal_GDP_last_ticks,

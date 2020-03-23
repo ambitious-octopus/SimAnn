@@ -787,7 +787,7 @@ v
 v
 0
 1
-0.23
+0.13
 0.01
 1
 NIL
@@ -802,7 +802,7 @@ labor-market-M
 labor-market-M
 1
 10
-4.0
+8.0
 1
 1
 trials
@@ -852,7 +852,7 @@ goods-market-Z
 goods-market-Z
 1
 15
-2.0
+14.0
 1
 1
 trials
@@ -882,7 +882,7 @@ dividends-delta
 dividends-delta
 0
 0.5
-0.15
+0.35
 0.01
 1
 NIL
@@ -1003,7 +1003,7 @@ size-replacing-firms
 size-replacing-firms
 0.05
 0.5
-0.2
+0.5
 0.01
 1
 NIL
@@ -2038,42 +2038,34 @@ NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="run#5" repetitions="1000" runMetricsEveryStep="true">
+  <experiment name="run#6" repetitions="1" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="300"/>
+    <timeLimit steps="150"/>
     <metric>count workers with [not employed?] / count workers</metric>
-    <metric>ln-hopital nominal-GDP</metric>
-    <metric>ln-hopital real-GDP</metric>
-    <metric>max [production-Y] of fn-incumbent-firms</metric>
-    <metric>mean [production-Y] of fn-incumbent-firms</metric>
-    <metric>min [production-Y] of fn-incumbent-firms</metric>
-    <metric>max [production-Y] of firms</metric>
-    <metric>mean [production-Y] of firms</metric>
-    <metric>min [production-Y] of firms</metric>
-    <metric>mean [wage-offered-Wb] of firms</metric>
-    <metric>min [wage-offered-Wb] of firms</metric>
-    <metric>max [wage-offered-Wb] of firms</metric>
-    <metric>ln-hopital mean [wealth] of workers</metric>
-    <metric>ln-hopital max [wealth] of workers</metric>
-    <metric>ln-hopital round min [wealth] of workers</metric>
-    <metric>100 * mean [my-interest-rate] of firms</metric>
-    <metric>100 * min [my-interest-rate] of firms</metric>
-    <metric>100 * max [my-interest-rate] of firms</metric>
-    <metric>mean [my-interest-rate] of firms</metric>
-    <metric>max [my-interest-rate] of firms</metric>
-    <metric>min [my-interest-rate] of firms</metric>
     <enumeratedValueSet variable="credit-market-H">
       <value value="2"/>
+      <value value="4"/>
+      <value value="6"/>
+      <value value="8"/>
+      <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="number-of-firms">
+      <value value="50"/>
       <value value="100"/>
+      <value value="200"/>
+      <value value="400"/>
+      <value value="800"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="production-shock-rho">
       <value value="0.1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="v">
+      <value value="0.13"/>
       <value value="0.23"/>
+      <value value="0.43"/>
+      <value value="0.63"/>
+      <value value="0.83"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="price-shock-eta">
       <value value="0.1"/>
@@ -2082,10 +2074,18 @@ NetLogo 6.1.1
       <value value="0.05"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="labor-market-M">
+      <value value="2"/>
       <value value="4"/>
+      <value value="6"/>
+      <value value="8"/>
+      <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="dividends-delta">
+      <value value="0.05"/>
       <value value="0.15"/>
+      <value value="0.25"/>
+      <value value="0.35"/>
+      <value value="0.45"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="beta">
       <value value="0.87"/>
@@ -2095,9 +2095,17 @@ NetLogo 6.1.1
     </enumeratedValueSet>
     <enumeratedValueSet variable="goods-market-Z">
       <value value="2"/>
+      <value value="5"/>
+      <value value="8"/>
+      <value value="11"/>
+      <value value="14"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="size-replacing-firms">
+      <value value="0.1"/>
       <value value="0.2"/>
+      <value value="0.3"/>
+      <value value="0.4"/>
+      <value value="0.5"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>

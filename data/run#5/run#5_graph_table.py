@@ -105,8 +105,8 @@ def wind_selector(serie,from_tick,to_tick):
 #%%
 #PARAMETRI PER IL CALCOLO DEGLI INDICATORI
 
-wind_from_tick = 280
-wind_to_tick = 300
+wind_from_tick = 0
+wind_to_tick = 30
 wind_range = wind_to_tick - wind_from_tick
 x_wind_reg= np.arange(151,302)
 x_all_reg=np.arange(302)
@@ -208,7 +208,6 @@ wage_reg_line = wage_slope * x_all_reg + wage_intercept
 
 #%% WEALTH (ln-hopital mean [wealth] of workers)
 
-
 #Indicatori intera curva
 wealth = column_splitter(data, 1000, par=".12")
 wealth_mean = wealth.mean(axis=1)
@@ -231,7 +230,6 @@ wealth_reg_line = wealth_slope * x_all_reg + wealth_intercept
 
 
 #%% INTEREST RATE (mean [my-interest-rate] of firms)
-
 
 #Indicatori intera curva
 interest_rate = column_splitter(data, 1000, par=".18")
@@ -256,9 +254,7 @@ interest_rate_reg_line = interest_rate_slope * x_all_reg + interest_rate_interce
 
 
 #%% GRAFICO
-
 x= np.arange(0,301)
-
 fig = make_subplots(rows=6, cols=2, 
                     vertical_spacing=0.019,
                     horizontal_spacing=0.019,

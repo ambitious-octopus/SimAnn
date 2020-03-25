@@ -28,6 +28,12 @@ raw_data = reader("run#6-spreadsheet.csv")
 #Divido raw_data in due parti: data_head con info descrittive e data con i dati attuali
 input_parameter, descriptive, data = raw_data[:12], raw_data[12:19], raw_data[19:]
 
+#Processo gli input_parameter
+parameter = input_parameter["[run number]"]
+input_parameter.index = parameter
+input_parameter = input_parameter.drop(["[run number]"], axis=1)
+input_parameter.columns = np.arange(1,78126)
+
 #Elimino la prima colonna che non indica una mazza
 data = data.drop("[run number]", axis=1)
 
@@ -38,33 +44,12 @@ data.index = new_index
 data = data.astype("float64")
 #%%
 
-y_dato = data["1"].to_numpy(np.float64).reshape((151,1))
+topos_raw = pd.DataFrame(np.loadtxt("media_run").astype("float64"))
+topos = topos_raw[150:]
+input_parameter.loc["dfd"] = np.loadtxt("Discrete_Frechet_distance").astype("float64")
+input_parameter.loc["dtw"] = np.loadtxt("Dynamic_Time_Warping").astype("float64")
 
-dato = np.hstack((x_dato,y_dato))
 
-
-freschetto = sm.frechet_dist(topos, dato)
-#%%
-scale_factor = 150
-time = new_index/scale_factor
-x = time.reshape((151,1))
-#Carico la media della run#5 per Unemployement Rate
-raw_media_run = np.loadtxt("media_run").astype("float64")
-#Faccio uno slicing dei primi e un reshape
-media_run = raw_media_run[:151].reshape((151,1))
-
-topos = topos = np.hstack((x,media_run))
-
-Discrete_Frechet_distance = []
-Curve_Length_based = []
-start = time.time()
-for a in range(1,100):
-    y = data[str(a)].to_numpy(np.float64).reshape((151,1))
-    cord_new = np.hstack((x,y))
-    Discrete_Frechet_distance.append(sm.frechet_dist(topos,cord_new))
-    print("Column: " + str(a))
-    end = time.time()
-    print("Tempo di processamento: " + str(end - start))
 
 
 

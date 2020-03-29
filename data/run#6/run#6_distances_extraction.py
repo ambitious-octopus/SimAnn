@@ -44,6 +44,10 @@ x = time_x.reshape((151,1))
 raw_media_run = np.loadtxt("media_run").astype("float64")
 #Faccio uno slicing dei primi e un reshape
 media_run = raw_media_run[:151].reshape((151,1))
+<<<<<<< Updated upstream:data/run#6/run#6_distances_extraction.py
+=======
+
+>>>>>>> Stashed changes:data/run#6/run#6_analisi.py
 topos = np.hstack((x,media_run))
 
 Discrete_Frechet_distance = []

@@ -8,7 +8,11 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import plotly.express as px
 import os
-import time
+
+from matplotlib import pyplot as plt
+from sklearn.cluster import AgglomerativeClustering
+import scipy.cluster.hierarchy as sch
+
 
 #%%
 base_path = os.getcwd()
@@ -43,16 +47,28 @@ data.index = new_index
 
 data = data.astype("float64")
 #%%
-
+#Carico i dati
+#Carico la media dell'unemployement rate sulle 1000 run
 topos_raw = pd.DataFrame(np.loadtxt("media_run").astype("float64"))
-topos = topos_raw[150:]
-input_parameter.loc["dfd"] = np.loadtxt("Discrete_Frechet_distance").astype("float64")
-input_parameter.loc["dtw"] = np.loadtxt("Dynamic_Time_Warping").astype("float64")
+#Prendo saolo i primi 150 ticks
+topos = topos_raw[:151]
+#Carico il vettore con le distanze di frechet
+dfd = np.loadtxt("Discrete_Frechet_distance").astype("float64")
+#Carico il vettore con il dynamic time warping
+dtw = np.loadtxt("Dynamic_Time_Warping").astype("float64")
+#Li inserisco in un dataframe
+input_parameter.loc["dfd"] = dfd
+input_parameter.loc["dtw"] = dtw
+input_parameter = input_parameter.astype("float64")
 
+indici = []
+for ind,a in enumerate(dtw):
+    if a > 100:
+        plt.plot(data[str(ind+1)])
+        indici.append(ind+1)
+plt.show()
 
-
-
-
+parametracci = input_parameter[indici]
 
 
 

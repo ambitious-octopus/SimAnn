@@ -65,7 +65,7 @@ for par in unused_parameter:
     input_parameter.drop(par, axis=1, inplace=True)
 
 th_dtw = 40
-th_dfd = 0.2
+th_dfd = 0
 
 #Creo una lista degli indici da eliminare
 #pick_index_dtw = input_parameter[input_parameter["dtw"] > th_dtw].index.tolist()
@@ -87,22 +87,20 @@ temp_counter = 0
 
 
 for n_cluster in n_cluster_list:
-    kmeans = KMeans(n_clusters=n_cluster, n_init=15, max_iter=450, random_state=23)
+    kmeans = KMeans(n_clusters=n_cluster, n_init=10, max_iter=300, random_state=23)
     cluster_found = kmeans.fit_predict(data_th_sca)
     sillhoute_scores.append(silhouette_score(data_th_sca, kmeans.labels_))
     inertia.append(kmeans.inertia_)
     temp_counter += 1
     print("n_cluster: " + str(temp_counter))
 
-plt.plot(n_cluster_list,sillhoute_scores, label='silhoute')
-plt.show()
-plt.plot(n_cluster_list,inertia, label='inertia')
+plt.plot(sillhoute_scores)
 plt.show()
 
 #%%
 #Faccio il fit della combinazione migliore e creo una lista con l'indice della curva e la rispettiva classe
-clusters = 4
-kmeans = KMeans(n_clusters=clusters, n_init=15, max_iter=450, random_state=23)
+clusters = 6
+kmeans = KMeans(n_clusters=clusters, n_init=10, max_iter=300, random_state=23)
 cluster_found = kmeans.fit_predict(data_th)
 cluster_found_sr = pd.Series(cluster_found, name='cluster')
 centroid = kmeans.cluster_centers_
@@ -111,6 +109,8 @@ plt.plot(centroid.T[:,0], label='0 n= ' + str(cluster_found_sr.value_counts()[0]
 plt.plot(centroid.T[:,1], label='1 n= ' + str(cluster_found_sr.value_counts()[1]))
 plt.plot(centroid.T[:,2], label='2 n= ' + str(cluster_found_sr.value_counts()[2]))
 plt.plot(centroid.T[:,3], label='3 n= ' + str(cluster_found_sr.value_counts()[3]))
+plt.plot(centroid.T[:,4], label='4 n= ' + str(cluster_found_sr.value_counts()[4]))
+plt.plot(centroid.T[:,5], label='5 n= ' + str(cluster_found_sr.value_counts()[5]))
 plt.plot(topos, label="Topos")
 plt.legend(loc="upper left")
 plt.show()
@@ -120,36 +120,62 @@ cluster_1 = data_th[np.where(cluster_found == 0)[0],:]
 cluster_2 = data_th[np.where(cluster_found == 1)[0],:]
 cluster_3 = data_th[np.where(cluster_found == 2)[0],:]
 cluster_4 = data_th[np.where(cluster_found == 3)[0],:]
+cluster_5 = data_th[np.where(cluster_found == 4)[0],:]
+cluster_6 = data_th[np.where(cluster_found == 5)[0],:]
 
-#Faccio dei subplot con tutte le curve
+
 fig = plt.figure()
-plt.subplot(2, 2, 1)
+plt.subplot(2, 3, 1)
 plt.plot(cluster_1.T, alpha=0.1, color="gray")
 plt.plot(centroid.T[:,0], label='1 n= ' + str(cluster_found_sr.value_counts()[0]))
 plt.legend(loc="upper left")
-plt.subplot(2, 2, 2)
+plt.subplot(2, 3, 2)
 plt.plot(cluster_2.T, alpha=0.1, color="gray")
 plt.plot(centroid.T[:,1], label='2 n= ' + str(cluster_found_sr.value_counts()[1]))
 plt.legend(loc="upper left")
-plt.subplot(2, 2, 3)
+plt.subplot(2, 3, 3)
 plt.plot(cluster_3.T, alpha=0.1, color="gray")
 plt.plot(centroid.T[:,2], label='3 n= ' + str(cluster_found_sr.value_counts()[2]))
 plt.legend(loc="upper left")
-plt.subplot(2, 2, 4)
+plt.subplot(2, 3, 4)
 plt.plot(cluster_4.T, alpha=0.1, color="gray")
 plt.plot(centroid.T[:,3], label='4 n= ' + str(cluster_found_sr.value_counts()[3]))
 plt.legend(loc="upper left")
+plt.subplot(2, 3, 5)
+plt.plot(cluster_5.T, alpha=0.1, color="gray")
+plt.plot(centroid.T[:,4], label='5 n= ' + str(cluster_found_sr.value_counts()[4]))
+plt.legend(loc="upper left")
+plt.subplot(2, 3, 6)
+plt.plot(cluster_6.T, alpha=0.1, color="gray")
+plt.plot(centroid.T[:,5], label='6 n= ' + str(cluster_found_sr.value_counts()[5]))
+plt.legend(loc="upper left")
+plt.show()
+
+
+
+#%%
+for index, cluster in enumerate(cluster_found):
+    if cluster == 1:
+        plt.plot(data_th[index], color="grey", alpha=0.1)
+
+plt.plot(centroid.T[:,1], color="red")
 plt.show()
 
 #%%
-#Faccio una Poly Reg
-#Estraggo la y
-dfd_list = np.array(dfd[pick_index_dfd])
-dfd_cluster_1 = dfd_list[np.where(cluster_found == 0)[0]]
-dfd_cluster_2 = dfd_list[np.where(cluster_found == 1)[0]]
-dfd_cluster_3 = dfd_list[np.where(cluster_found == 2)[0]]
-dfd_cluster_4 = dfd_list[np.where(cluster_found == 3)[0]]
+#Scaling
+kmeans = KMeans(n_clusters=6)
+kmeans.fit(data_th_sca)
+data_th_rev = std.inverse_transform(data_th_sca)
+cluster_found_sca = kmeans.predict(data_th_rev)
+centroid_sca = std.inverse_transform(kmeans.cluster_centers_)
+plt.plot(data_th_rev.T, alpha=0.1, color="gray")
+plt.plot(centroid_sca.T)
+plt.show()
 
-#Parametri per la regressione
-par_reg = input_parameter.iloc[pick_index_dfd]
 
+for index, cluster in enumerate(cluster_found_sca):
+    if cluster == 3:
+        plt.plot(data_th_rev[index], color="grey", alpha=0.1)
+
+plt.plot(centroid.T[:,3], color="red")
+plt.show()

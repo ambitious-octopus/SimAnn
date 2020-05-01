@@ -1,4 +1,5 @@
 import pandas as pd
+pd.options.mode.chained_assignment = None #Questa funzione disabilità il CopyWarning
 import numpy as np
 import os
 from matplotlib import pyplot as plt
@@ -59,7 +60,6 @@ input_parameter.drop(unused_parameter, axis=1, inplace=True)
 # Seleziono un valore di metrica e faccio uno slice sulla base di questo
 th_dtw = 0
 th_dfd = 0.20
-
 # Sualla base della th faccio uno slice dei parametri e delle curve
 th_index =  input_parameter['dfd'] > th_dfd
 par_th = input_parameter[th_index]

@@ -1,0 +1,41 @@
+Division by zero.
+error while firm 595 running /
+  called by procedure LABOR-MARKET
+  called by procedure GO
+  called by procedure __EVALUATOR
+
+org.nlogo.nvm.RuntimePrimitiveException: Division by zero.
+ at org.nlogo.prim._asm_procedurelabormarket_setbreedvariable_5.perform(:3)
+ at org.nlogo.nvm.Context.runExclusive(Context.java:133)
+ at org.nlogo.nvm.ExclusiveJob.run(ExclusiveJob.scala:39)
+ at org.nlogo.nvm.Context.runExclusiveJob(Context.java:177)
+ at org.nlogo.prim._asm_procedurelabormarket_ask_4.perform(:1)
+ at org.nlogo.nvm.Context.stepConcurrent(Context.java:107)
+ at org.nlogo.nvm.ConcurrentJob.step(ConcurrentJob.scala:65)
+ at org.nlogo.job.JobThread.runPrimaryJobs(JobThread.scala:133)
+ at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:68)
+ at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+ at scala.util.control.Exception$Catch.apply(Exception.scala:228)
+ at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+ at org.nlogo.job.JobThread.run(JobThread.scala:66)
+
+NetLogo 6.1.1
+main: org.nlogo.app.AppFrame
+thread: JobThread
+Java HotSpot(TM) 64-Bit Server VM 1.8.0_202 (Oracle Corporation; 1.8.0_202-b08)
+operating system: Windows 10 10.0 (amd64 processor)
+Scala version 2.12.8
+JOGL: (3D View not initialized)
+OpenGL Graphics: (3D View not initialized)
+model: [no_edit]original_bam_model
+
+11:16:42.873 RuntimeErrorEvent (org.nlogo.app.App$$anon$4 (org.nlogo.window.GUIWorkspace)) AWT-EventQueue-0
+11:16:42.873 JobRemovedEvent (org.nlogo.app.App$$anon$4 (org.nlogo.window.GUIWorkspace)) JobThread
+11:16:42.873 OutputEvent (org.nlogo.app.App$$anon$4 (org.nlogo.window.GUIWorkspace)) AWT-EventQueue-0
+11:16:42.867 OutputEvent (org.nlogo.app.App$$anon$4 (org.nlogo.window.GUIWorkspace)) AWT-EventQueue-0
+11:16:42.866 OutputEvent (org.nlogo.app.App$$anon$4 (org.nlogo.window.GUIWorkspace)) AWT-EventQueue-0
+11:16:42.866 OutputEvent (org.nlogo.app.App$$anon$4 (org.nlogo.window.GUIWorkspace)) AWT-EventQueue-0
+11:16:42.864 OutputEvent (org.nlogo.app.App$$anon$4 (org.nlogo.window.GUIWorkspace)) AWT-EventQueue-0
+11:16:42.863 OutputEvent (org.nlogo.app.App$$anon$4 (org.nlogo.window.GUIWorkspace)) AWT-EventQueue-0
+11:16:42.857 OutputEvent (org.nlogo.app.App$$anon$4 (org.nlogo.window.GUIWorkspace)) AWT-EventQueue-0
+11:16:42.857 OutputEvent (org.nlogo.app.App$$anon$4 (org.nlogo.window.GUIWorkspace)) AWT-EventQueue-0

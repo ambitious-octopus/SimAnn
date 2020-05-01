@@ -76,8 +76,6 @@ data_th = (data.iloc[np.arange(0,151),pick_index_dfd]).to_numpy().T
 #Scalo i parametri
 std = StandardScaler()
 data_th_sca = std.fit_transform(data_th)
-
-
 #%%
 #CERCO I PARAMETRI MIGLIORI
 sillhoute_scores = []
@@ -85,11 +83,10 @@ inertia = []
 n_cluster_list = np.arange(2, 11).astype(int)
 temp_counter = 0
 
-
 for n_cluster in n_cluster_list:
     kmeans = KMeans(n_clusters=n_cluster, n_init=15, max_iter=450, random_state=23)
-    cluster_found = kmeans.fit_predict(data_th_sca)
-    sillhoute_scores.append(silhouette_score(data_th_sca, kmeans.labels_))
+    cluster_found = kmeans.fit_predict(data_th)
+    sillhoute_scores.append(silhouette_score(data_th, kmeans.labels_))
     inertia.append(kmeans.inertia_)
     temp_counter += 1
     print("n_cluster: " + str(temp_counter))
@@ -125,31 +122,130 @@ cluster_4 = data_th[np.where(cluster_found == 3)[0],:]
 fig = plt.figure()
 plt.subplot(2, 2, 1)
 plt.plot(cluster_1.T, alpha=0.1, color="gray")
-plt.plot(centroid.T[:,0], label='1 n= ' + str(cluster_found_sr.value_counts()[0]))
+plt.plot(centroid.T[:,0], label='1 n= ' + str(cluster_found_sr.value_counts()[0]), color="red")
 plt.legend(loc="upper left")
 plt.subplot(2, 2, 2)
 plt.plot(cluster_2.T, alpha=0.1, color="gray")
-plt.plot(centroid.T[:,1], label='2 n= ' + str(cluster_found_sr.value_counts()[1]))
+plt.plot(centroid.T[:,1], label='2 n= ' + str(cluster_found_sr.value_counts()[1]), color="red")
 plt.legend(loc="upper left")
 plt.subplot(2, 2, 3)
 plt.plot(cluster_3.T, alpha=0.1, color="gray")
-plt.plot(centroid.T[:,2], label='3 n= ' + str(cluster_found_sr.value_counts()[2]))
+plt.plot(centroid.T[:,2], label='3 n= ' + str(cluster_found_sr.value_counts()[2]), color="red")
 plt.legend(loc="upper left")
 plt.subplot(2, 2, 4)
 plt.plot(cluster_4.T, alpha=0.1, color="gray")
-plt.plot(centroid.T[:,3], label='4 n= ' + str(cluster_found_sr.value_counts()[3]))
+plt.plot(centroid.T[:,3], label='4 n= ' + str(cluster_found_sr.value_counts()[3]), color="red")
 plt.legend(loc="upper left")
 plt.show()
 
 #%%
-#Faccio una Poly Reg
-#Estraggo la y
-dfd_list = np.array(dfd[pick_index_dfd])
-dfd_cluster_1 = dfd_list[np.where(cluster_found == 0)[0]]
-dfd_cluster_2 = dfd_list[np.where(cluster_found == 1)[0]]
-dfd_cluster_3 = dfd_list[np.where(cluster_found == 2)[0]]
-dfd_cluster_4 = dfd_list[np.where(cluster_found == 3)[0]]
-
+#Preprocessing Polynoimila Regression
 #Parametri per la regressione
 par_reg = input_parameter.iloc[pick_index_dfd]
+par_reg["cluster"] = cluster_found
 
+par_cluster_1 = par_reg[par_reg['cluster'] == 3]
+
+#Li faccio passare dento un logaritmo
+par_reg["number-of-firms"] = np.log(par_reg["number-of-firms"])
+par_reg["dfd"] = np.log(par_reg["dfd"])
+par_reg["dtw"] = np.log(par_reg["dtw"])
+
+matrix_scaled_par_reg = StandardScaler().fit_transform(par_reg.values)
+scaled_par_reg = pd.DataFrame(matrix_scaled_par_reg, index=par_reg.index,columns=par_reg.columns)
+scaled_par_reg.drop("cluster", axis=1, inplace=True)
+scaled_par_reg["cluster"] = cluster_found
+
+par_cluster_1 = scaled_par_reg[scaled_par_reg['cluster'] == 0]
+par_cluster_2 = scaled_par_reg[scaled_par_reg['cluster'] == 1]
+par_cluster_3 = scaled_par_reg[scaled_par_reg['cluster'] == 2]
+par_cluster_4 = scaled_par_reg[scaled_par_reg['cluster'] == 3]
+
+x_clus_1 = (par_cluster_1.iloc[:,0:7]).to_numpy()
+x_clus_2 = (par_cluster_2.iloc[:,0:7]).to_numpy()
+x_clus_3 = (par_cluster_3.iloc[:,0:7]).to_numpy()
+x_clus_4 = (par_cluster_4.iloc[:,0:7]).to_numpy()
+
+y_clus_1 = (par_cluster_1.iloc[:,8]).to_numpy()
+y_clus_2 = (par_cluster_2.iloc[:,8]).to_numpy()
+y_clus_3 = (par_cluster_3.iloc[:,8]).to_numpy()
+y_clus_4 = (par_cluster_4.iloc[:,8]).to_numpy()
+#%%
+from sklearn.preprocessing import PolynomialFeatures
+#Polynomial Regression
+poly = PolynomialFeatures(2)
+x_clus_1_poly = poly.fit_transform(x_clus_1)
+poly = PolynomialFeatures(2)
+x_clus_2_poly = poly.fit_transform(x_clus_2)
+poly = PolynomialFeatures(2)
+x_clus_3_poly = poly.fit_transform(x_clus_3)
+poly = PolynomialFeatures(2)
+x_clus_4_poly = poly.fit_transform(x_clus_4)
+
+model = LinearRegression()
+model.fit(x_clus_1_poly, y_clus_1)
+y_poly_pred_1 = model.predict(x_poly)
+# Calcolo l'erroe
+rmse = np.sqrt(mean_squared_error(y, y_poly_pred))
+# Calcolo r2
+r2 = model.score(x_poly, y)
+#Estraggo i coefficenti del modello
+coef = model.coef_
+#Estraggo le combinazioni
+coef_names = np.array(poly.get_feature_names())
+#Creo un dataframe con coef e combinazioni
+coef_and_names = pd.DataFrame({"coef": coef, "names": coef_names})
+#Li ordino in modod da visualizzarli meglio
+coef_and_names = coef_and_names.sort_values(by='coef')
+#%%
+
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+from sklearn.ensemble import RandomForestRegressor
+
+par_reg["number-of-firms"] = np.log(par_reg["number-of-firms"])
+par_reg["dfd"] = np.log(par_reg["dfd"])
+par_reg["dtw"] = np.log(par_reg["dtw"])
+matrix_scaled_par_reg = StandardScaler().fit_transform(par_reg.values)
+scaled_par_reg = pd.DataFrame(matrix_scaled_par_reg, index=par_reg.index, columns=par_reg.columns)
+scaled_par_reg.drop("cluster", axis=1, inplace=True)
+scaled_par_reg["cluster"] = cluster_found
+
+for cl_id in range(clusters):
+    print("cluster", cl_id)
+    par_reg_clas = scaled_par_reg[scaled_par_reg['cluster'] == cl_id]
+    x = par_reg_clas.iloc[:, 0:7]
+    y = par_reg_clas.iloc[:, 8]  # pick dfd
+    print("mean dfd = ", np.mean(y))
+    print("std dfd = ", np.std(y))
+    # Istanzio un Polinomial features, 2°grado
+    poly = PolynomialFeatures(2, include_bias=True)
+    # Faccio un fit.trasform sulla x
+    x_poly = poly.fit_transform(x)
+    # Istanzio una regressione lineare
+    model = LinearRegression()
+    # Faccio il fit
+    model.fit(x_poly, y)
+    # Estraggo la y predetta
+    y_poly_pred = model.predict(x_poly)
+    # Calcolo l'erroe
+    rmse = np.sqrt(mean_squared_error(y, y_poly_pred))
+    print("rmse: ", rmse)
+    # Calcolo r2
+    r2 = model.score(x_poly, y)
+    print("R^2: ", r2)
+    # Estraggo i coefficenti del modello
+    coef = model.coef_
+    # Estraggo le combinazioni
+    coef_names = np.array(poly.get_feature_names())
+    # Creo un dataframe con coef e combinazioni
+    coef_and_names = pd.DataFrame({"coef": coef, "names": coef_names})
+    # Li ordino in modod da visualizzarli meglio
+    coef_and_names = coef_and_names.sort_values(by='coef')
+    print("head")
+    print(coef_and_names.head())
+    print("tail")
+    print(coef_and_names.tail())
+    print("Media Colonne")
+    print(np.mean(x))

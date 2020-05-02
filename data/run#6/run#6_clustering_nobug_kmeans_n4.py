@@ -69,7 +69,7 @@ pick_index_real = pick_index - 1
 data_th = (data.iloc[pick_index_real, np.arange(0, 151)]).to_numpy()
 # %%
 # Faccio il fit della combinazione migliore e creo una lista con l'indice della curva e la rispettiva classe
-clusters = 4
+clusters = 3
 kmeans = KMeans(n_clusters=clusters, n_init=15, max_iter=450, random_state=23)
 cluster_found = kmeans.fit_predict(data_th)
 cluster_found_sr = pd.Series(cluster_found, name='cluster')
@@ -78,7 +78,7 @@ plt.plot(data_th.T, alpha=0.1, color="gray")
 plt.plot(centroid.T[:, 0], label='0 n= ' + str(cluster_found_sr.value_counts()[0]))
 plt.plot(centroid.T[:, 1], label='1 n= ' + str(cluster_found_sr.value_counts()[1]))
 plt.plot(centroid.T[:, 2], label='2 n= ' + str(cluster_found_sr.value_counts()[2]))
-plt.plot(centroid.T[:, 3], label='3 n= ' + str(cluster_found_sr.value_counts()[3]))
+#plt.plot(centroid.T[:, 3], label='3 n= ' + str(cluster_found_sr.value_counts()[3]))
 plt.plot(topos, label="Topos")
 plt.legend(loc="upper left")
 plt.show()
@@ -87,7 +87,7 @@ plt.show()
 cluster_1 = data_th[np.where(cluster_found == 0)[0], :]
 cluster_2 = data_th[np.where(cluster_found == 1)[0], :]
 cluster_3 = data_th[np.where(cluster_found == 2)[0], :]
-cluster_4 = data_th[np.where(cluster_found == 3)[0], :]
+#cluster_4 = data_th[np.where(cluster_found == 3)[0], :]
 
 # Faccio dei subplot con tutte le curve
 fig = plt.figure()
@@ -103,10 +103,10 @@ plt.subplot(2, 2, 3)
 plt.plot(cluster_3.T, alpha=0.1, color="gray")
 plt.plot(centroid.T[:, 2], label='3 n= ' + str(cluster_found_sr.value_counts()[2]), color="red")
 plt.legend(loc="upper left")
-plt.subplot(2, 2, 4)
-plt.plot(cluster_4.T, alpha=0.1, color="gray")
-plt.plot(centroid.T[:, 3], label='4 n= ' + str(cluster_found_sr.value_counts()[3]), color="red")
-plt.legend(loc="upper left")
+#plt.subplot(2, 2, 4)
+#plt.plot(cluster_4.T, alpha=0.1, color="gray")
+#plt.plot(centroid.T[:, 3], label='4 n= ' + str(cluster_found_sr.value_counts()[3]), color="red")
+#plt.legend(loc="upper left")
 plt.show()
 
 

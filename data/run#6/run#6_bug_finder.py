@@ -67,28 +67,6 @@ pick_index = np.array(input_parameter[input_parameter["dfd"] > th_dfd].index.tol
 pick_index_real = pick_index - 1
 data_th = (data.iloc[pick_index_real, np.arange(0, 151)]).to_numpy()
 #%%
-from sklearn.neighbors import NearestNeighbors
-# todo: Settare i maledetti iperparametri, utile: (https://towardsdatascience.com/machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc)
-from sklearn.cluster import DBSCAN
-dbscan = DBSCAN(eps=0.8, min_samples=5)
-dbscan.fit(data_th)
-print(np.unique(dbscan.labels_))
-
-fig = plt.figure()
-for index, element in enumerate(np.unique(dbscan.labels_)):
-    sum = np.sum(dbscan.labels_ == element)
-    plt.subplot(np.floor(len(np.unique(dbscan.labels_))/1), np.floor(len(np.unique(dbscan.labels_))/1), index + 1)
-    plt.plot((data_th[np.where(dbscan.labels_ == element)[0],:]).T, alpha=0.3, color="gray")
-    plt.text(0.2, 0.98, "     c = " + str(element) + " n = " + str(sum),  fontsize=9)
-plt.show()
-
-bug = (data_th[np.where(dbscan.labels_ == 1)[0],:])
-#Questi sono bug!
-plt.plot(bug.T)
-plt.show()
-# todo: Capire quali parametri generano i bug sopra
-# todo: Cercare Bug attraverso il gradiente
-
 data = data.to_numpy()
 index_bad = []
 for index,curve in enumerate(data):
@@ -100,3 +78,4 @@ for index,curve in enumerate(data):
         plt.plot(curve)
 plt.show()
 
+#%%

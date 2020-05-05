@@ -56,6 +56,7 @@ input_parameter.drop(bug_index.astype(int), axis=0, inplace=True)
 # Tolgo i parametri che non sono stati cambiati
 unused_parameter = ["production-shock-rho", "price-shock-eta", "wages-shock-xi", "beta", "interest-shock-phi"]
 input_parameter.drop(unused_parameter, axis=1, inplace=True)
+#%%
 # Seleziono un valore di metrica e faccio uno slice sulla base di questo
 th_dtw = 0
 th_dfd = 0.20
@@ -67,36 +68,36 @@ pick_index = np.array(input_parameter[input_parameter["dfd"] > th_dfd].index.tol
 pick_index_real = pick_index - 1
 data_th = (data.iloc[pick_index_real, np.arange(0, 151)]).to_numpy()
 #%%
-from sklearn.neighbors import NearestNeighbors
-# todo: Settare i maledetti iperparametri, utile: (https://towardsdatascience.com/machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc)
-from sklearn.cluster import DBSCAN
-dbscan = DBSCAN(eps=0.8, min_samples=5)
-dbscan.fit(data_th)
-print(np.unique(dbscan.labels_))
-
-fig = plt.figure()
-for index, element in enumerate(np.unique(dbscan.labels_)):
-    sum = np.sum(dbscan.labels_ == element)
-    plt.subplot(np.floor(len(np.unique(dbscan.labels_))/1), np.floor(len(np.unique(dbscan.labels_))/1), index + 1)
-    plt.plot((data_th[np.where(dbscan.labels_ == element)[0],:]).T, alpha=0.3, color="gray")
-    plt.text(0.2, 0.98, "     c = " + str(element) + " n = " + str(sum),  fontsize=9)
-plt.show()
-
-bug = (data_th[np.where(dbscan.labels_ == 1)[0],:])
-#Questi sono bug!
-plt.plot(bug.T)
-plt.show()
-# todo: Capire quali parametri generano i bug sopra
-# todo: Cercare Bug attraverso il gradiente
-
 data = data.to_numpy()
 index_bad = []
 for index,curve in enumerate(data):
+    print(index)
     grad = np.gradient(curve)
     counter = 0
-    print(grad)
-    if grad[140] == grad[141] and grad[141] == grad[142] and grad[142] == grad[143]:
+    if grad[141] == grad[142] and grad[142] == grad[143] and grad[143] == grad[144] and grad[144] == grad[145]:
         index_bad.append(index)
-        plt.plot(curve)
+for i in index_bad:
+    plt.plot(data[i])
 plt.show()
+
+#Tolgo i parametri
+input_parameter.drop(index_bad, axis=0, inplace=True)
+
+
+#%%
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+
+#Splitto x e y
+x_raw = input_parameter.iloc[:,0:7]
+y_raw = input_parameter.iloc[:,7]
+X_train, X_test, y_train, y_test = train_test_split(x_raw, y_raw, test_size=0.20, random_state=42)
+
+forest_reg = RandomForestRegressor()
+forest_reg.fit(X_train, y_train)
+forest_reg_pred = forest_reg.predict(X_test)
+forest_reg_mse = np.sqrt(mean_squared_error(y_test, forest_reg_pred))
+
+importance = sorted(zip(forest_reg.feature_importances_, X_train.columns ), reverse=True)
 

@@ -79,3 +79,6 @@ for index,curve in enumerate(data):
 plt.show()
 
 #%%
+
+a = np.zeros(15)
+

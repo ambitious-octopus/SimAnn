@@ -81,17 +81,24 @@ for i in index_bad:
 plt.show()
 
 #Tolgo i parametri
-input_parameter.drop(index_bad, axis=0, inplace=True)
+par_th.drop(index_bad, axis=0, inplace=True)
+
+counter = 0
+for index, row in par_th.iterrows():
+    if index in index_bad:
+        par_th.drop(index, axis=0, inplace=True)
+    else:
+        counter =+ 1
 
 
 #%%
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 
 #Splitto x e y
-x_raw = input_parameter.iloc[:,0:7]
-y_raw = input_parameter.iloc[:,7]
+x_raw = par_th.iloc[:,0:7]
+y_raw = par_th.iloc[:,7]
 X_train, X_test, y_train, y_test = train_test_split(x_raw, y_raw, test_size=0.20, random_state=42)
 
 forest_reg = RandomForestRegressor()
@@ -99,5 +106,24 @@ forest_reg.fit(X_train, y_train)
 forest_reg_pred = forest_reg.predict(X_test)
 forest_reg_mse = np.sqrt(mean_squared_error(y_test, forest_reg_pred))
 
-importance = sorted(zip(forest_reg.feature_importances_, X_train.columns ), reverse=True)
+importance = sorted(zip(forest_reg.feature_importances_, X_train.columns), reverse=True)
+
+
+
+
+#%%
+#Grid_search
+
+param_grid = [{"n_estimators" : [3,10,30], "max_features" : [2,4,6,8]},
+             {"bootstrap":[False], "n_estimators": [3,10], "max_features" : [2,3,4]}]
+
+forest_reg = RandomForestRegressor()
+grid_search = GridSearchCV(forest_reg, param_grid, cv=5, scoring="neg_mean_squared_error", return_train_score=True)
+grid_search.fit(X_train, y_train)
+
+cvresult = grid_search.cv_results_
+for mean_score, params in zip(cvresult["mean_test_score"], cvresult["params"]):
+    print(np.sqrt(-mean_score), params)
+
+
 

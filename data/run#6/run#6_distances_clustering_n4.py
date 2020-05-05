@@ -29,7 +29,7 @@ parameter = input_parameter["[run number]"]
 input_parameter.index = parameter
 input_parameter = input_parameter.drop(["[run number]"], axis=1)
 input_parameter.columns = np.arange(1, 78126)
-# Elimino la prima colonna che non indica una mazza
+# Elimino la prima colonna che non indica niente
 data = data.drop("[run number]", axis=1)
 # Cambio il nome delle righe
 new_index = np.arange(0, 151)

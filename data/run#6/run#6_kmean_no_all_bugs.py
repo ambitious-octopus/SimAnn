@@ -144,5 +144,26 @@ plt.legend(loc="upper left")
 plt.show()
 
 #%%
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
 
-# todo: Fare random regressor sui cluster e controllare l'importanza delle features
+par_th["cluster"] = cluster_found
+
+for cl_id in range(clusters):
+    print("cluster", cl_id)
+    par_reg_clus = par_th[par_th['cluster'] == cl_id]
+    x_raw = par_reg_clus.iloc[:,:7]
+    y_raw = par_reg_clus.iloc[:,7]
+    X_train, X_test, y_train, y_test = train_test_split(x_raw, y_raw, test_size=0.20, random_state=42)
+    forest_reg = RandomForestRegressor()
+    forest_reg.fit(X_train, y_train)
+    forest_reg_pred = forest_reg.predict(X_test)
+    forest_reg_mse = np.sqrt(mean_squared_error(y_test, forest_reg_pred))
+    importance = sorted(zip(forest_reg.feature_importances_, X_train.columns), reverse=True)
+    print("Cluster" + str(cl_id))
+    print(forest_reg_mse)
+    print(importance)
+    print()
+
+

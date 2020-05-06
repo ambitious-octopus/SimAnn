@@ -64,7 +64,7 @@ unused_parameter = ["production-shock-rho", "price-shock-eta", "wages-shock-xi",
 for par in unused_parameter:
     input_parameter.drop(par, axis=1, inplace=True)
 
-th_dtw = 40
+th_dtw = 0
 th_dfd = 0.2
 
 #Creo una lista degli indici da eliminare

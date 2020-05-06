@@ -68,7 +68,7 @@ pick_index_real = pick_index - 1
 data_th = (data.iloc[pick_index_real, np.arange(0, 151)]).to_numpy()
 #%%
 from sklearn.neighbors import NearestNeighbors
-# todo: Settare i maledetti iperparametri, utile: (https://towardsdatascience.com/machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc)
+
 from sklearn.cluster import DBSCAN
 dbscan = DBSCAN(eps=0.8, min_samples=5)
 dbscan.fit(data_th)
@@ -86,8 +86,7 @@ bug = (data_th[np.where(dbscan.labels_ == 1)[0],:])
 #Questi sono bug!
 plt.plot(bug.T)
 plt.show()
-# todo: Capire quali parametri generano i bug sopra
-# todo: Cercare Bug attraverso il gradiente
+
 
 data = data.to_numpy()
 index_bad = []

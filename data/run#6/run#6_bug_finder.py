@@ -80,5 +80,4 @@ plt.show()
 
 #%%
 
-a = np.zeros(15)
 

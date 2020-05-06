@@ -109,8 +109,6 @@ forest_reg_mse = np.sqrt(mean_squared_error(y_test, forest_reg_pred))
 importance = sorted(zip(forest_reg.feature_importances_, X_train.columns), reverse=True)
 
 
-
-
 #%%
 #Grid_search
 

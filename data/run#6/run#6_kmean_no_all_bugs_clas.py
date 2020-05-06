@@ -145,27 +145,74 @@ plt.show()
 
 #%%
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import mean_squared_error, accuracy_score
+from sklearn.metrics import precision_score, recall_score
 
 par_th["cluster"] = cluster_found
 
-for cl_id in range(clusters):
-    print("cluster", cl_id)
-    par_reg_clus = par_th[par_th['cluster'] == cl_id]
-    x_raw = par_reg_clus.iloc[:,:7]
-    y_raw = par_reg_clus.iloc[:,7]
-    X_train, X_test, y_train, y_test = train_test_split(x_raw, y_raw, test_size=0.20, random_state=42)
-    forest_reg = RandomForestRegressor()
-    forest_reg.fit(X_train, y_train)
-    forest_reg_pred = forest_reg.predict(X_test)
-    forest_reg_mse = np.sqrt(mean_squared_error(y_test, forest_reg_pred))
-    importance = sorted(zip(forest_reg.feature_importances_, X_train.columns), reverse=True)
-    print("Cluster" + str(cl_id))
-    print("Root Mean Squared Error" + str(forest_reg_mse))
-    print("Importance of features")
-    for e in importance:
-        print(e)
-    print()
+
+x_raw = par_th.iloc[:,:7]
+y_raw = par_th.iloc[:,9]
+X_train, X_test, y_train, y_test = train_test_split(x_raw, y_raw, test_size=0.20, random_state=42, stratify=y_raw)
+rand_clas = RandomForestClassifier(n_estimators=500, random_state=42)
+rand_clas.fit(X_train, y_train)
+y_pred = rand_clas.predict(X_test)
+importance = sorted(zip(rand_clas.feature_importances_, X_train.columns), reverse=True)
+accuracy_score(y_test, y_pred)
+
+#Random Grid Search
+from sklearn.model_selection import RandomizedSearchCV
+# Number of trees in random forest
+n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 10)]
+# Number of features to consider at every split
+max_features = ['auto', 'sqrt']
+# Maximum number of levels in tree
+max_depth = [int(x) for x in np.linspace(10, 110, num = 11)]
+max_depth.append(None)
+# Minimum number of samples required to split a node
+min_samples_split = [2, 5, 10]
+# Minimum number of samples required at each leaf node
+min_samples_leaf = [1, 2, 4]
+# Method of selecting samples for training each tree
+bootstrap = [True, False]
+# Create the random grid
+random_grid = {'n_estimators': n_estimators,
+               'max_features': max_features,
+               'max_depth': max_depth,
+               'min_samples_split': min_samples_split,
+               'min_samples_leaf': min_samples_leaf,
+               'bootstrap': bootstrap}
+
+# Use the random grid to search for best hyperparameters
+# First create the base model to tune
+rf = RandomForestClassifier()
+# Random search of parameters, using 3 fold cross validation,
+# search across 100 different combinations, and use all available cores
+rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = -1)
+# Fit the random search model
+rf_random.fit(X_train, y_train)
+
+rf_random.best_params_
+
+rtf_2 = RandomForestClassifier(n_estimators=800,min_samples_split=5, min_samples_leaf=1, max_features='sqrt', max_depth=100,bootstrap = False)
+rtf_2.fit(X_train,y_train)
+y_pred_rtf_2 = rtf_2.predict(X_test)
+accuracy_score(y_test, y_pred_rtf_2)
+importance = sorted(zip(rtf_2.feature_importances_, X_train.columns), reverse=True)
+
+print("Accuracy: ", accuracy_score(y_test, y_pred_rtf_2))
+print("Features importance: ")
+for e in importance:
+    print(e)
+
+
+#%%
+from sklearn.neighbors import KNeighborsClassifier
+kn = KNeighborsClassifier()
+kn.fit(X_train,y_train)
+y_pred_sgd = kn.predict(X_test)
+print("Accuracy: ",accuracy_score(y_test, y_pred_sgd))
+
 
 
